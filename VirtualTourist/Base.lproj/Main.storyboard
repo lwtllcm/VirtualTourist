@@ -25,6 +25,7 @@
                                 </variation>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="z7A-dn-Naw" appends="YES" id="NXr-l6-Vm6"/>
+                                    <outletCollection property="gestureRecognizers" destination="349-oM-FCE" appends="YES" id="vFW-Ir-vTK"/>
                                 </connections>
                             </mapView>
                         </subviews>
@@ -50,6 +51,11 @@
                         <action selector="longPressed:" destination="BYZ-38-t0r" id="Kb0-eh-jgd"/>
                     </connections>
                 </pongPressGestureRecognizer>
+                <tapGestureRecognizer id="349-oM-FCE">
+                    <connections>
+                        <action selector="mapTapped:" destination="BYZ-38-t0r" id="ugk-Cg-UuE"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="439.5" y="352.5"/>
         </scene>

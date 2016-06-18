@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     
@@ -21,8 +21,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        let allAnnotations = self.mapView.annotations
-        self.mapView.removeAnnotations(allAnnotations)
+       // let allAnnotations = self.mapView.annotations
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -30,8 +30,25 @@ class ViewController: UIViewController, MKMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func longPressed(sender: AnyObject) {
+    @IBAction func mapTapped(sender: AnyObject) {
+        print("mapTapped")
+       
+      }
+    
+    @IBAction func longPressed(sender: UILongPressGestureRecognizer) {
         print("longPressed")
+        
+        let tappedLocation = sender.locationInView(mapView)
+        print(tappedLocation)
+        let tappedCoordinate = mapView.convertPoint(tappedLocation, toCoordinateFromView: mapView)
+        print(tappedCoordinate)
+
+        let annotation = MKPointAnnotation()
+
+        annotation.coordinate = tappedCoordinate
+        self.mapView.addAnnotation(annotation)
+                
+        
     }
     
     
