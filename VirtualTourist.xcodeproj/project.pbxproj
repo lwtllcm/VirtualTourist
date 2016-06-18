@@ -12,6 +12,12 @@
 		5BD9A7781D13A9B700D3BDCE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BD9A7761D13A9B700D3BDCE /* Main.storyboard */; };
 		5BD9A77A1D13A9B700D3BDCE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BD9A7791D13A9B700D3BDCE /* Assets.xcassets */; };
 		5BD9A77D1D13A9B700D3BDCE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BD9A77B1D13A9B700D3BDCE /* LaunchScreen.storyboard */; };
+		5BD9A7861D13AE1000D3BDCE /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A7841D13AE1000D3BDCE /* Model.xcdatamodeld */; };
+		5BD9A78F1D15C36300D3BDCE /* Photo+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A7881D15C36300D3BDCE /* Photo+CoreDataProperties.m */; };
+		5BD9A7901D15C36300D3BDCE /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A78A1D15C36300D3BDCE /* Photo.m */; };
+		5BD9A7911D15C36300D3BDCE /* Pin+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A78C1D15C36300D3BDCE /* Pin+CoreDataProperties.m */; };
+		5BD9A7921D15C36300D3BDCE /* Pin.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A78E1D15C36300D3BDCE /* Pin.m */; };
+		5BD9A7951D15C3FB00D3BDCE /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A7941D15C3FB00D3BDCE /* CoreDataStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +28,16 @@
 		5BD9A7791D13A9B700D3BDCE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5BD9A77C1D13A9B700D3BDCE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5BD9A77E1D13A9B700D3BDCE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5BD9A7851D13AE1000D3BDCE /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		5BD9A7871D15C36300D3BDCE /* Photo+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Photo+CoreDataProperties.h"; path = "../Photo+CoreDataProperties.h"; sourceTree = "<group>"; };
+		5BD9A7881D15C36300D3BDCE /* Photo+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Photo+CoreDataProperties.m"; path = "../Photo+CoreDataProperties.m"; sourceTree = "<group>"; };
+		5BD9A7891D15C36300D3BDCE /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Photo.h; path = ../Photo.h; sourceTree = "<group>"; };
+		5BD9A78A1D15C36300D3BDCE /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Photo.m; path = ../Photo.m; sourceTree = "<group>"; };
+		5BD9A78B1D15C36300D3BDCE /* Pin+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Pin+CoreDataProperties.h"; path = "../Pin+CoreDataProperties.h"; sourceTree = "<group>"; };
+		5BD9A78C1D15C36300D3BDCE /* Pin+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Pin+CoreDataProperties.m"; path = "../Pin+CoreDataProperties.m"; sourceTree = "<group>"; };
+		5BD9A78D1D15C36300D3BDCE /* Pin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pin.h; path = ../Pin.h; sourceTree = "<group>"; };
+		5BD9A78E1D15C36300D3BDCE /* Pin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Pin.m; path = ../Pin.m; sourceTree = "<group>"; };
+		5BD9A7941D15C3FB00D3BDCE /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +70,32 @@
 		5BD9A7711D13A9B700D3BDCE /* VirtualTourist */ = {
 			isa = PBXGroup;
 			children = (
+				5BD9A7931D15C39800D3BDCE /* Model */,
 				5BD9A7721D13A9B700D3BDCE /* AppDelegate.swift */,
 				5BD9A7741D13A9B700D3BDCE /* ViewController.swift */,
 				5BD9A7761D13A9B700D3BDCE /* Main.storyboard */,
 				5BD9A7791D13A9B700D3BDCE /* Assets.xcassets */,
 				5BD9A77B1D13A9B700D3BDCE /* LaunchScreen.storyboard */,
 				5BD9A77E1D13A9B700D3BDCE /* Info.plist */,
+				5BD9A7941D15C3FB00D3BDCE /* CoreDataStack.swift */,
 			);
 			path = VirtualTourist;
+			sourceTree = "<group>";
+		};
+		5BD9A7931D15C39800D3BDCE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5BD9A7841D13AE1000D3BDCE /* Model.xcdatamodeld */,
+				5BD9A7871D15C36300D3BDCE /* Photo+CoreDataProperties.h */,
+				5BD9A7881D15C36300D3BDCE /* Photo+CoreDataProperties.m */,
+				5BD9A7891D15C36300D3BDCE /* Photo.h */,
+				5BD9A78A1D15C36300D3BDCE /* Photo.m */,
+				5BD9A78B1D15C36300D3BDCE /* Pin+CoreDataProperties.h */,
+				5BD9A78C1D15C36300D3BDCE /* Pin+CoreDataProperties.m */,
+				5BD9A78D1D15C36300D3BDCE /* Pin.h */,
+				5BD9A78E1D15C36300D3BDCE /* Pin.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,8 +169,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BD9A7921D15C36300D3BDCE /* Pin.m in Sources */,
 				5BD9A7751D13A9B700D3BDCE /* ViewController.swift in Sources */,
 				5BD9A7731D13A9B700D3BDCE /* AppDelegate.swift in Sources */,
+				5BD9A78F1D15C36300D3BDCE /* Photo+CoreDataProperties.m in Sources */,
+				5BD9A7901D15C36300D3BDCE /* Photo.m in Sources */,
+				5BD9A7861D13AE1000D3BDCE /* Model.xcdatamodeld in Sources */,
+				5BD9A7911D15C36300D3BDCE /* Pin+CoreDataProperties.m in Sources */,
+				5BD9A7951D15C3FB00D3BDCE /* CoreDataStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,10 +289,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = VirtualTourist/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.student.VirtualTourist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -260,6 +302,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = VirtualTourist/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.student.VirtualTourist;
@@ -286,8 +329,22 @@
 				5BD9A7831D13A9B700D3BDCE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		5BD9A7841D13AE1000D3BDCE /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				5BD9A7851D13AE1000D3BDCE /* Model.xcdatamodel */,
+			);
+			currentVersion = 5BD9A7851D13AE1000D3BDCE /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 5BD9A7671D13A9B700D3BDCE /* Project object */;
 }
