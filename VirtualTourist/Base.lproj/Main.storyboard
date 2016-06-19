@@ -57,7 +57,7 @@
         <!--Photo Album View Controller-->
         <scene sceneID="zvf-m2-lMI">
             <objects>
-                <viewController id="jU6-kR-6Du" customClass="PhotoAlbumViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PhotoAlbumViewController" id="jU6-kR-6Du" customClass="PhotoAlbumViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dCu-e8-y4S"/>
                         <viewControllerLayoutGuide type="bottom" id="4BM-Ta-2t2"/>
@@ -66,16 +66,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Dzu-YZ-cAP">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="deC-bS-0la">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="3ZP-vO-KHf">
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="10" y="75" width="377" height="172"/>
+                                </variation>
+                            </mapView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QGl-bR-WX7">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="HW4-8M-jmV">
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="R9o-e2-oM7">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="HsM-CJ-HAq">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -86,34 +92,33 @@
                                     </collectionViewCell>
                                 </cells>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="257" width="392" height="543"/>
+                                    <rect key="frame" x="10" y="291" width="365" height="314"/>
                                 </variation>
                             </collectionView>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Y7k-vG-7E8">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="400" height="249"/>
-                                </variation>
-                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="Dzu-YZ-cAP"/>
-                                <exclude reference="Y7k-vG-7E8"/>
+                                <exclude reference="deC-bS-0la"/>
+                                <exclude reference="QGl-bR-WX7"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
-                                <include reference="Dzu-YZ-cAP"/>
-                                <include reference="Y7k-vG-7E8"/>
+                                <include reference="deC-bS-0la"/>
+                                <include reference="QGl-bR-WX7"/>
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="sdo-54-kjI"/>
+                    <connections>
+                        <outlet property="collectionView" destination="QGl-bR-WX7" id="URo-CL-haW"/>
+                        <outlet property="mapView" destination="deC-bS-0la" id="pZQ-hK-bkO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EVb-DQ-XOY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2202" y="352.5"/>
+            <point key="canvasLocation" x="3441" y="292.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="t3V-ic-UqM">
@@ -132,6 +137,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jlv-Sv-USv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="439.5" y="352.5"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="wi6-qb-IL2">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="6BV-zI-xm5" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3to-Ky-jjf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="jU6-kR-6Du" kind="relationship" relationship="rootViewController" id="xMc-0t-Pmb"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tic-I2-g0D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2523" y="292.5"/>
         </scene>
     </scenes>
 </document>

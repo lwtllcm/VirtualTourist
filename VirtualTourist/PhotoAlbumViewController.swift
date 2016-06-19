@@ -9,12 +9,16 @@
 import UIKit
 import MapKit
 
-class PhotoAlbumViewController: UIViewController {
+class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
+    
     
     @IBOutlet weak var mapView: MKMapView!
-    
+       
+    @IBOutlet weak var collectionView: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("PhotoAlbumViewController viewDidLoad")
+        //self.mapView.delegate = self
         
         // from legacy PersistentObjects & Core Data - Find the Context
        // let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -22,8 +26,11 @@ class PhotoAlbumViewController: UIViewController {
         
     }
     
+    
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        print("PhotoAlbumViewController viewWillAppear")
         
         
     }

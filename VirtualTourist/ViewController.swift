@@ -44,7 +44,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     }
 
     
-  
+  /*
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if (control == view.rightCalloutAccessoryView) {
         
@@ -54,9 +54,14 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
             
         }
     }
+ */
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         print("annotationView selected")
+        
+        //let photoAlbumViewController = PhotoAlbumViewController()
+        let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController")
+        self.presentViewController(photoAlbumViewController!, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
