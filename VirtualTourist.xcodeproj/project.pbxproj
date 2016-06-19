@@ -18,6 +18,7 @@
 		5BD9A7911D15C36300D3BDCE /* Pin+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A78C1D15C36300D3BDCE /* Pin+CoreDataProperties.m */; };
 		5BD9A7921D15C36300D3BDCE /* Pin.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A78E1D15C36300D3BDCE /* Pin.m */; };
 		5BD9A7951D15C3FB00D3BDCE /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A7941D15C3FB00D3BDCE /* CoreDataStack.swift */; };
+		5BD9A7971D16149800D3BDCE /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A7961D16149800D3BDCE /* PhotoAlbumViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		5BD9A78D1D15C36300D3BDCE /* Pin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pin.h; path = ../Pin.h; sourceTree = "<group>"; };
 		5BD9A78E1D15C36300D3BDCE /* Pin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Pin.m; path = ../Pin.m; sourceTree = "<group>"; };
 		5BD9A7941D15C3FB00D3BDCE /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		5BD9A7961D16149800D3BDCE /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,9 +72,9 @@
 		5BD9A7711D13A9B700D3BDCE /* VirtualTourist */ = {
 			isa = PBXGroup;
 			children = (
+				5BD9A7981D1614A100D3BDCE /* Controllers */,
 				5BD9A7931D15C39800D3BDCE /* Model */,
 				5BD9A7721D13A9B700D3BDCE /* AppDelegate.swift */,
-				5BD9A7741D13A9B700D3BDCE /* ViewController.swift */,
 				5BD9A7761D13A9B700D3BDCE /* Main.storyboard */,
 				5BD9A7791D13A9B700D3BDCE /* Assets.xcassets */,
 				5BD9A77B1D13A9B700D3BDCE /* LaunchScreen.storyboard */,
@@ -96,6 +98,15 @@
 				5BD9A78E1D15C36300D3BDCE /* Pin.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		5BD9A7981D1614A100D3BDCE /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				5BD9A7961D16149800D3BDCE /* PhotoAlbumViewController.swift */,
+				5BD9A7741D13A9B700D3BDCE /* ViewController.swift */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,6 +182,7 @@
 			files = (
 				5BD9A7921D15C36300D3BDCE /* Pin.m in Sources */,
 				5BD9A7751D13A9B700D3BDCE /* ViewController.swift in Sources */,
+				5BD9A7971D16149800D3BDCE /* PhotoAlbumViewController.swift in Sources */,
 				5BD9A7731D13A9B700D3BDCE /* AppDelegate.swift in Sources */,
 				5BD9A78F1D15C36300D3BDCE /* Photo+CoreDataProperties.m in Sources */,
 				5BD9A7901D15C36300D3BDCE /* Photo.m in Sources */,

@@ -15,8 +15,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
+        self.mapView.delegate = self
+          }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -24,16 +24,52 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
        // let allAnnotations = self.mapView.annotations
         
     }
+  
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        print("viewForAnnotation")
+        let reuseId = "pin"
+        
+        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView?.pinTintColor = UIColor.greenColor()
+            pinView?.canShowCallout = false
+            
+        }
+        else {
+            pinView?.annotation = annotation
+        }
+        return pinView
+        
+    }
+
+    
+  
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if (control == view.rightCalloutAccessoryView) {
+        
+        print("annotationTapped")
+           // let photoAlbumViewController = PhotoAlbumViewController()
+           // self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
+            
+        }
+    }
+    
+    func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
+        print("annotationView selected")
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-
-    @IBAction func mapTapped(sender: AnyObject) {
+/*
+    
+   @IBAction func mapTapped(sender: AnyObject) {
         print("mapTapped")
-       
+    
+    
       }
+ */
     
     @IBAction func longPressed(sender: UILongPressGestureRecognizer) {
         print("longPressed")
@@ -46,12 +82,19 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         let annotation = MKPointAnnotation()
 
         annotation.coordinate = tappedCoordinate
-        self.mapView.addAnnotation(annotation)
-                
+        
+        annotation.title = "test annotation"
+        
+        
+        //self.mapView.addAnnotation(annotation)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.mapView.addAnnotation(annotation)
+            
+        }
+        
         
     }
-    
-    
-
+ 
 }
 
