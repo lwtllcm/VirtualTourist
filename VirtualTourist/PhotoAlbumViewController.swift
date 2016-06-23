@@ -56,7 +56,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         
        // let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.places.search&api_key=b0d07eb44e2ff9d792583e75b89f898a&query=california&format=rest&api_sig=7eeb526bfcb9f394c574d0a5c0930d52")!)
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=b0d07eb44e2ff9d792583e75b89f898a&text=cats&safe_search=1&extras=url_m&format=json&nonsoncallback=1")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=b0d07eb44e2ff9d792583e75b89f898a&text=cats&safe_search=1&extras=url_m&format=json&nojsoncallback=1")!)
         
         let task = session.dataTaskWithRequest(request) {(data, response, error) in
             func displayError(error: String) {
@@ -65,6 +65,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
             
             guard (error == nil) else {
                 displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                displayError("Your request returned a status code other than 2xx!")
                 return
             }
             
