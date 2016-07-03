@@ -119,7 +119,7 @@ extension CoreDataStack  {
         // just leave empty tables.
         try coordinator.destroyPersistentStoreAtURL(dbURL, withType:NSSQLiteStoreType , options: nil)
         
-        try addStoreTo(coordinator: self.coordinator, storeType: NSSQLiteStoreType, configuration: nil, storeURL: dbURL, options: nil)
+        //try addStoreTo(coordinator: self.coordinator, storeType: NSSQLiteStoreType, configuration: nil, storeURL: dbURL, options: nil)
         
         
     }
@@ -210,6 +210,7 @@ extension CoreDataStack {
                 self.persistingContext.performBlock(){
                     do{
                         try self.persistingContext.save()
+                        print("persisting context")
                     }catch{
                         fatalError("Error while saving persisting context: \(error)")
                     }
@@ -222,12 +223,19 @@ extension CoreDataStack {
         
         
     }
-    
+   /*
+    func saveContext() throws{
+        if context.hasChanges {
+            try context.save()
+            print("saved count",context.insertedObjects.count)
+        }
+    }
+ */
     
     func autoSave(delayInSeconds : Int){
         
         if delayInSeconds > 0 {
-            print("Autosaving")
+            print("autosaving")
             save()
             
             let delayInNanoSeconds = UInt64(delayInSeconds) * NSEC_PER_SEC
