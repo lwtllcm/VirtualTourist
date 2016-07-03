@@ -11,6 +11,7 @@
 		5B7EB83C1D237836008DCAF1 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7EB8381D237836008DCAF1 /* Photo.swift */; };
 		5B7EB83D1D237836008DCAF1 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7EB8391D237836008DCAF1 /* Pin+CoreDataProperties.swift */; };
 		5B7EB83E1D237836008DCAF1 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7EB83A1D237836008DCAF1 /* Pin.swift */; };
+		5B7EB8401D29A302008DCAF1 /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7EB83F1D29A302008DCAF1 /* CoreDataController.swift */; };
 		5BD9A7731D13A9B700D3BDCE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A7721D13A9B700D3BDCE /* AppDelegate.swift */; };
 		5BD9A7751D13A9B700D3BDCE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD9A7741D13A9B700D3BDCE /* ViewController.swift */; };
 		5BD9A7781D13A9B700D3BDCE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BD9A7761D13A9B700D3BDCE /* Main.storyboard */; };
@@ -28,6 +29,7 @@
 		5B7EB8381D237836008DCAF1 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		5B7EB8391D237836008DCAF1 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5B7EB83A1D237836008DCAF1 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		5B7EB83F1D29A302008DCAF1 /* CoreDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataController.swift; sourceTree = "<group>"; };
 		5BD9A76F1D13A9B700D3BDCE /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BD9A7721D13A9B700D3BDCE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5BD9A7741D13A9B700D3BDCE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			children = (
 				5BD9A7961D16149800D3BDCE /* PhotoAlbumViewController.swift */,
 				5BD9A7741D13A9B700D3BDCE /* ViewController.swift */,
+				5B7EB83F1D29A302008DCAF1 /* CoreDataController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 				5BD9A7731D13A9B700D3BDCE /* AppDelegate.swift in Sources */,
 				5B7EB83E1D237836008DCAF1 /* Pin.swift in Sources */,
 				5BD9A7A21D1A322800D3BDCE /* FlickrPhotos.swift in Sources */,
+				5B7EB8401D29A302008DCAF1 /* CoreDataController.swift in Sources */,
 				5B7EB83B1D237836008DCAF1 /* Photo+CoreDataProperties.swift in Sources */,
 				5B7EB83D1D237836008DCAF1 /* Pin+CoreDataProperties.swift in Sources */,
 				5BD9A7861D13AE1000D3BDCE /* Model.xcdatamodeld in Sources */,

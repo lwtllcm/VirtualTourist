@@ -58,6 +58,9 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         else {
             for pin in (fetchedResultsController?.fetchedObjects)! {
             print(pin)
+                self.setAnnotations(pin as! Pin)
+                self.mapView.reloadInputViews()
+
             }
         }
         
@@ -76,17 +79,26 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     
     func setAnnotations (pin:Pin) {
         print("setAnnotations")
-        var annotations = [MKPointAnnotation]()
+        //var annotations = [MKPointAnnotation]()
         let lat1 = CLLocationDegrees(pin.latitude!)
+        print(lat1)
         let long1 = CLLocationDegrees(pin.longitude!)
+        print(long1)
         let coordinate1 = CLLocationCoordinate2D(latitude: lat1!, longitude: long1!)
         print(coordinate1)
         let annotation = MKPointAnnotation()
+        
         annotation.coordinate = coordinate1
         
+        
+        self.mapView.addAnnotation(annotation)
+
+        /*
         dispatch_async(dispatch_get_main_queue()) {
-            self.mapView.addAnnotations(annotations)
+            //self.mapView.addAnnotations(annotations)
+            self.mapView.addAnnotation(annotation)
         }
+ */
         
     }
     
