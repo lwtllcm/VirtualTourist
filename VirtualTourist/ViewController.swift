@@ -27,7 +27,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         if let fc = fetchedResultsController {
             do {
                 try fc.performFetch()
-                print(fc.fetchedObjects)
+                //print(fc.fetchedObjects)
             }
             catch {
                 print ("error in performFetch")
@@ -47,6 +47,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let stack = delegate.stack
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        print("ViewController fr", fr)
+        
         
         //print(fetchedResultsController.fetchedObjects)
         print("pin count",fetchedResultsController!.fetchedObjects?.count)
@@ -164,8 +166,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         
         //let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController")
         
-        photoAlbumViewController.mapLatitude = "33.955190025712511"
-        photoAlbumViewController.mapLongitude = "-118.07473099889084"
+        photoAlbumViewController.mapLatitude = "52.247849103093301"
+        photoAlbumViewController.mapLongitude = "-105.589742638687"
         self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
     }
     

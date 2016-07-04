@@ -22,10 +22,27 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     var mapLatitude = ""
     var mapLongitude = ""
     
+    var returnedPhotos = []
+    
     var fetchedResultsController:NSFetchedResultsController? {
         didSet {
             //fetchedResultsController?.delegate = self
             print("PhotoAlbumViewController fetchedResultsController ")
+            executeSearch()
+        }
+    }
+    
+    
+    func executeSearch() {
+        print("executeSearch")
+        if let fc = fetchedResultsController {
+            do {
+                try fc.performFetch()
+                print(fc.fetchedObjects)
+            }
+            catch {
+                print ("error in performFetch")
+            }
         }
     }
     
@@ -36,17 +53,72 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         print("mapLatitude", mapLatitude)
         print("mapLongitude", mapLongitude)
         
-       /*
+        let space: CGFloat = 3.0
         
-        let fr = NSFetchRequest(entityName: "Pin")
-        fr.setValue(mapLatitude, forKey: latitude)
-        fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
+        flowLayout.minimumInteritemSpacing = space
+        flowLayout.minimumLineSpacing = space
+        flowLayout.itemSize = CGSizeMake(100.0, 100.0)
+        
+      
         
         let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let stack = delegate.stack
+        
+        let fr = NSFetchRequest(entityName: "Pin")
+
+       //fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true), NSSortDescriptor(key: "longitude", ascending:  true)]
+        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true)]
+
+        let testLatitudePredicate = 52.247849103093301
+        //let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
+        let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
+        let longitudePredicate = NSPredicate(format: "longitude = %@", mapLongitude)
+        let andPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [latitudePredicate, longitudePredicate])
+        //fr.predicate = andPredicate
+        fr.predicate = latitudePredicate
+
+        print(fr)
+        
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
-        //print(fetchedResultsController.fetchedObjects)
+        //print("PhotoAlbumViewController fetched results count",fetchedResultsController!.fetchedObjects?.count)
+       
+        executeSearch()
+        
+        print("after executeSearch", fetchedResultsController?.fetchedObjects)
+        
+        for result in (fetchedResultsController?.fetchedObjects)! {
+            print(result.valueForKey("photos"))
+            print(result.valueForKey("latitude"))
+            
+            if let thisPhoto = result.valueForKey("photos") {
+                print("photos found count", thisPhoto.count)
+                if thisPhoto.count == 0 {
+                    getPhotos()
+                   // print(result.valueForKey("url_m"))
+                    
+                }
+                
+            }
+            else {
+                print("photo not found")
+            }
+            
+            /*
+            if let photo = result.photos  as! Photo{
+                returnedPhotos.append(photo)
+            }
+            else {
+                print("no result photos")
+            }
+        }
+ */
+            //photos.append(result.photos as! Photo)
+            //print("photos", photos)
+        }
+        
+        /*
+        print(fetchedResultsController.fetchedObjects)
         print("pin count",fetchedResultsController!.fetchedObjects?.count)
         
         if fetchedResultsController?.fetchedObjects?.count == 0 {
@@ -63,7 +135,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 
         */
         
-        getPhotos()
+        //getPhotos()
         
         //FlickrPhotos.getPhotos().response
         
@@ -100,7 +172,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
        // let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.places.search&api_key=b0d07eb44e2ff9d792583e75b89f898a&query=california&format=rest&api_sig=7eeb526bfcb9f394c574d0a5c0930d52")!)
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&text=cats&safe_search=1&extras=url_m&format=json&nojsoncallback=1")!)
+        //let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&text=cats&safe_search=1&extras=url_m&format=json&nojsoncallback=1")!)
+        
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&bbox=-123.8587455078125,46.35308398800007,-120.5518607421875,48.587958419830336&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1")!)
         
         let task = session.dataTaskWithRequest(request) {(data, response, error) in
             func displayError(error: String) {
@@ -126,7 +200,18 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let parsedResult: AnyObject!
             do {
                 parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-                print(parsedResult)
+                //print(parsedResult)
+                
+                self.returnedPhotos = (parsedResult.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                
+                //print("returnedPhoto", self.returnedPhotos)
+
+                
+               // self.returnedPhotos.append(returnedPhoto) as! NSURL
+                
+                print("returnedPhotos", self.returnedPhotos)
+                
+                
             } catch {
                 displayError("Could not parse the data as JSON: '\(data)'")
                 return
@@ -151,15 +236,24 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         print("MemeCollectionViewController cellForItemAtIndexPath")
-        let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath)
+        //let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath)
         
         
-       // let memeCell = collectionView.dequeueReusableCellWithReuseIdentifier("MemeCollectionViewCell", forIndexPath: indexPath) as! MemeCollectionViewCell
-        //let meme = memes[indexPath.row]
+        
+       let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
+       
+        let photo = returnedPhotos[indexPath.row] as! UIImage
+        
+        //let image = photo as! UIImage
+        photoCell.photoImageView.image = photo
+       
         
         //photoCell.photoImageView.image = meme.memedImage
         
-        //photoCell.photoImageView.image = par
+        //photoCell.photoImageView.image = parsedResults.
+        
+        //print(fetchedResultsController?.fetchedObjects.)
+        
         return photoCell
     }
 }
