@@ -253,7 +253,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print("collectionView numberOfItemsInSection")
         //return memes.count
-        return 1
+        //return returnedPhotos.count
+        
+        return 3
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -263,13 +265,15 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         
        let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
+        
+        photoCell.backgroundColor = UIColor.blueColor()
        
-        let photo = returnedPhotos[indexPath.row] as! UIImage
+       // let photo = returnedPhotos[indexPath.row] as! UIImage
         
         //let image = photo as! UIImage
         
         
-        photoCell.photoImageView.image = photo
+      //  photoCell.photoImageView.image = photo
         
         
        /* dispatch_async(dispatch_get_main_queue()) {
