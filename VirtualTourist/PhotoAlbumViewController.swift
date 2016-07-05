@@ -19,10 +19,18 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    var mapLatitude = ""
-    var mapLongitude = ""
+    
+    //photoAlbumViewController.mapLatitude = "52.247849103093301"
+    //photoAlbumViewController.mapLongitude = "-105.589742638687"
+    
+    var mapLatitude = "12.820669628231199"
+    var mapLongitude = "-84.372921928403002"
+    
+
     
     var returnedPhotos = []
+    
+    
     
     var fetchedResultsController:NSFetchedResultsController? {
         didSet {
@@ -55,8 +63,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let space: CGFloat = 3.0
         
-        flowLayout.minimumInteritemSpacing = space
         flowLayout.minimumLineSpacing = space
+        
+        flowLayout.minimumLineSpacing = space
+        
         flowLayout.itemSize = CGSizeMake(100.0, 100.0)
         
       
@@ -67,11 +77,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let fr = NSFetchRequest(entityName: "Pin")
 
        //fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true), NSSortDescriptor(key: "longitude", ascending:  true)]
+        
         fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true)]
 
         let testLatitudePredicate = 52.247849103093301
         //let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
-        let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
+        let latitudePredicate = NSPredicate(format: "latitude == 49.642736216382403")
         let longitudePredicate = NSPredicate(format: "longitude = %@", mapLongitude)
         let andPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [latitudePredicate, longitudePredicate])
         //fr.predicate = andPredicate
@@ -81,7 +92,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
-        //print("PhotoAlbumViewController fetched results count",fetchedResultsController!.fetchedObjects?.count)
+        print("PhotoAlbumViewController fetched results count",fetchedResultsController!.fetchedObjects?.count)
        
         executeSearch()
         
@@ -95,7 +106,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 print("photos found count", thisPhoto.count)
                 if thisPhoto.count == 0 {
                     getPhotos()
+                    print("returnedPhotos.count",returnedPhotos.count)
+                   // self.reloadInputViews()
                    // print(result.valueForKey("url_m"))
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.reloadInputViews()
+                    }
                     
                 }
                 
@@ -175,24 +192,29 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         //let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&text=cats&safe_search=1&extras=url_m&format=json&nojsoncallback=1")!)
         
         let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&bbox=-123.8587455078125,46.35308398800007,-120.5518607421875,48.587958419830336&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1")!)
-        
+        print(request)
+
         let task = session.dataTaskWithRequest(request) {(data, response, error) in
             func displayError(error: String) {
                 print(error)
             }
             
             guard (error == nil) else {
-                displayError("There was an error with your request: \(error)")
+                //displayError("There was an error with your request: \(error)")
+                print("There was an error with your request: \(error)")
                 return
             }
             
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                displayError("Your request returned a status code other than 2xx!")
+                //displayError("Your request returned a status code other than 2xx!")
+                print("Your request returned a status code other than 2xx!")
                 return
             }
             
             guard let data = data else {
-                displayError("No data was returned by the request!")
+                //displayError("No data was returned by the request!")
+                print("No data was returned by the request!")
+                
                 return
             }
             print("data returned")
@@ -235,17 +257,25 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        print("MemeCollectionViewController cellForItemAtIndexPath")
+        //print("MemeCollectionViewController cellForItemAtIndexPath")
         //let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath)
         
         
         
-       let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
+       let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
        
         let photo = returnedPhotos[indexPath.row] as! UIImage
         
         //let image = photo as! UIImage
+        
+        
         photoCell.photoImageView.image = photo
+        
+        
+       /* dispatch_async(dispatch_get_main_queue()) {
+            photoCell.photoImageView.image = photo
+        }
+*/
        
         
         //photoCell.photoImageView.image = meme.memedImage

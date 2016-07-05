@@ -162,13 +162,13 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         print("annotationView selected")
         
-        let photoAlbumViewController = PhotoAlbumViewController()
+        //let photoAlbumViewController = PhotoAlbumViewController()
         
-        //let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController")
+        let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController")
         
-        photoAlbumViewController.mapLatitude = "52.247849103093301"
-        photoAlbumViewController.mapLongitude = "-105.589742638687"
-        self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
+        //photoAlbumViewController.mapLatitude = "52.247849103093301"
+        //photoAlbumViewController.mapLongitude = "-105.589742638687"
+        self.presentViewController(photoAlbumViewController!, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
