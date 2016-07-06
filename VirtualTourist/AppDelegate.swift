@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //preloadData()
         
-        stack.autoSave(60)
+        stack.autoSave(20)
 
         return true
     }

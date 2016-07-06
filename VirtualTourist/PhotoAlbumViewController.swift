@@ -46,7 +46,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         if let fc = fetchedResultsController {
             do {
                 try fc.performFetch()
-                print(fc.fetchedObjects)
+                print("fetched objects",fc.fetchedObjects)
             }
             catch {
                 print ("error in performFetch")
@@ -82,13 +82,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 
         let testLatitudePredicate = 52.247849103093301
         //let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
-        let latitudePredicate = NSPredicate(format: "latitude == 49.642736216382403")
+        let latitudePredicate = NSPredicate(format: "latitude == 34.272264291400298")
         let longitudePredicate = NSPredicate(format: "longitude = %@", mapLongitude)
         let andPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [latitudePredicate, longitudePredicate])
         //fr.predicate = andPredicate
         fr.predicate = latitudePredicate
 
-        print(fr)
+        print("fr", fr)
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
@@ -97,6 +97,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         executeSearch()
         
         print("after executeSearch", fetchedResultsController?.fetchedObjects)
+        
+        if fetchedResultsController?.fetchedObjects?.count == 0 {
+            print("fetchedResultsController?.fetchedObjects?.count == 0")
+        }
+        else {
         
         for result in (fetchedResultsController?.fetchedObjects)! {
             print(result.valueForKey("photos"))
@@ -161,7 +166,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         // from legacy PersistentObjects & Core Data - Find the Context
        // let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         //let context = appDelegate.managedObjectContext
-        
+        }
     }
     
     
@@ -222,14 +227,17 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let parsedResult: AnyObject!
             do {
                 parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-                //print(parsedResult)
+                print(parsedResult)
                 
-                self.returnedPhotos = (parsedResult.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                //self.returnedPhotos = (parsedResult.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                
+                self.returnedPhotos = (parsedResult.valueForKey("photos")?.valueForKey("photo")!.valueForKey("url_m"))! as! NSArray
+                
                 
                 //print("returnedPhoto", self.returnedPhotos)
 
                 
-               // self.returnedPhotos.append(returnedPhoto) as! NSURL
+               //self.returnedPhotos.append(returnedPhoto) as! NSURL
                 
                 print("returnedPhotos", self.returnedPhotos)
                 
@@ -255,7 +263,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         //return memes.count
         //return returnedPhotos.count
         
-        return 3
+        return 1
+        //return 3
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -267,6 +276,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
        let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
         
         photoCell.backgroundColor = UIColor.blueColor()
+        
+        if returnedPhotos.count > 0 {
+            let thisFlickrPhoto = returnedPhotos[indexPath.row]
+            let thisFlickrPhotoThumbnail = thisFlickrPhoto.objectForKey("url_m") as! UIImage
+            //photoCell.photoImageView.image = thisFlickrPhotoThumbnail
+            
+            photoCell.photoImageView.image = thisFlickrPhotoThumbnail
+        }
        
        // let photo = returnedPhotos[indexPath.row] as! UIImage
         
