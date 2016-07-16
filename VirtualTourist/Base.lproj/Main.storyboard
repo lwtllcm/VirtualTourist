@@ -89,16 +89,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="170" height="134"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bTp-qj-9dB">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bTp-qj-9dB">
+                                                    <rect key="frame" x="0.0" y="0.0" width="170" height="134"/>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <constraints>
-                                            <constraint firstItem="bTp-qj-9dB" firstAttribute="top" secondItem="PAM-Mg-mFL" secondAttribute="top" id="Rza-TN-q63"/>
-                                            <constraint firstAttribute="bottom" secondItem="bTp-qj-9dB" secondAttribute="bottom" constant="84" id="ayW-qP-qjr"/>
-                                        </constraints>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="photoImageView" destination="bTp-qj-9dB" id="5fw-Cs-qAh"/>
                                         </connections>

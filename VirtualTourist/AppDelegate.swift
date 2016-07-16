@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let stack = CoreDataStack(modelName: "Model")!
     
+    var flickrPhotos = [FlickrPhotos]()
+    
 
     //var sharedSession = NSURLSession.sharedSession()
     
