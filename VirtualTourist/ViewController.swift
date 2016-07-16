@@ -164,11 +164,18 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         
         //let photoAlbumViewController = PhotoAlbumViewController()
         
-        let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController")
+        //let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
+        
+        var  photoAlbumViewController:PhotoAlbumViewController
+        photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
         
         //photoAlbumViewController.mapLatitude = "52.247849103093301"
         //photoAlbumViewController.mapLongitude = "-105.589742638687"
-        self.presentViewController(photoAlbumViewController!, animated: true, completion: nil)
+        
+        
+        //self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
+        
+        performSegueWithIdentifier("showPhotoAlbum", sender: self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -223,6 +230,12 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         //let pin = Pin(location: location, context:fetchedResultsController!.managedObjectContext)
         let pin = Pin(location: location, latitude: latitude, longitude: longitude, context: fetchedResultsController!.managedObjectContext)
         print("addPin", pin)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        print("prepareForSegue")
+        let controller = segue.destinationViewController as! PhotoAlbumViewController
+        
     }
  
 }
