@@ -26,6 +26,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     var returnedPhotoURLs = []
     var returnedPhotosArray:NSMutableArray = []
     
+    var selectedLatitude = ""
+    var selectedLongitude = ""
+    
     var fetchedResultsController:NSFetchedResultsController? {
         didSet {
             
@@ -53,6 +56,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         super.viewDidLoad()
         print("PhotoAlbumViewController viewDidLoad")
         
+        print("passed selectedLatitude ", self.selectedLatitude as NSString)
+        print("passed selectedLongitude ", self.selectedLongitude as NSString)
+
+        
        // print("mapLatitude", mapLatitude)
        // print("mapLongitude", mapLongitude)
         
@@ -74,7 +81,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         //let testLatitudePredicate = 52.247849103093301
                 //let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
         
-        let latitudePredicate = NSPredicate(format: "latitude == 34.272264291400298")
+        //let latitudePredicate = NSPredicate(format: "latitude == 34.272264291400298")
         
        // let longitudePredicate = NSPredicate(format: "longitude = %@", mapLongitude)
         
@@ -348,7 +355,50 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let session = NSURLSession.sharedSession()
         
-        let flickrSearchURL = NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&bbox=-123.8587455078125,46.35308398800007,-120.5518607421875,48.587958419830336&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1&per_page=5")!
+        //let flickrSearchURL = NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&bbox=-123.8587455078125,46.35308398800007,bbox=-123.8587455078125,46.35308398800007,48.587958419830336&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1&per_page=5")!
+        
+        var bboxString = "lon="
+        var bboxSelectedLongitude:NSString = selectedLongitude
+        print(bboxSelectedLongitude)
+        
+        bboxString = bboxString + (bboxSelectedLongitude as String)
+        
+        bboxString = bboxString + "&lat="
+        
+       // -123.8587455078125&lat="
+       
+        var bboxSelectedLatitude:NSString = selectedLatitude
+       // var bboxSelectedLatitude = ((selectedLatitude as NSString) as String)
+        print(bboxSelectedLatitude)
+        bboxString = bboxString + (bboxSelectedLatitude as String)
+       // print("bbox selectedLatitude", selectedLatitude as NSString)
+        /*
+        print(bboxString)
+        
+        bboxString = bboxString + ",bbox=-123.8587455078125,"
+        
+        print(bboxString)
+        
+        bboxString = bboxString + (bboxSelectedLatitude as String)
+        // print("bbox selectedLatitude", selectedLatitude as NSString)
+        
+        print(bboxString)
+ */
+        
+        /*
+        bboxString.stringByAppendingString(bboxSelectedLatitude as String)
+        print("bbox selectedLatitude", selectedLatitude as NSString)
+        print(bboxString)
+*/
+        
+        var flickrSearchURLString = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&"
+        flickrSearchURLString = flickrSearchURLString + bboxString
+        flickrSearchURLString = flickrSearchURLString + "&radius=20&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1&per_page=5"
+        print("flickrSearchURLString", flickrSearchURLString)
+        
+        
+        var flickrSearchURL = NSURL(string: flickrSearchURLString)!
+        print("flickrSearchURL", flickrSearchURL)
         
         let request = NSMutableURLRequest(URL: flickrSearchURL)
 

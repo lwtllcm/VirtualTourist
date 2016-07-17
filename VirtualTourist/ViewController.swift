@@ -14,6 +14,13 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
 
     @IBOutlet weak var mapView: MKMapView!
     
+    var selectedLatitude:String!
+    var selectedLongitude = ""
+    
+    var selectedCoordinateLatitudeString:String!
+    var selectedCoordinateLongitudeString:String!
+
+    
     var fetchedResultsController:NSFetchedResultsController? {
         didSet {
             //fetchedResultsController?.delegate = self
@@ -162,6 +169,29 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         print("annotationView selected")
         
+        var selectedCoordinateLatitude:CLLocationDegrees!
+        selectedCoordinateLatitude  = view.annotation?.coordinate.latitude
+        
+        var selectedCoordinateLongitude:CLLocationDegrees!
+        selectedCoordinateLongitude  = view.annotation?.coordinate.longitude
+        
+        
+        print("selectedCoordinateLatitude", selectedCoordinateLatitude)
+        print("selectedCoordinateLongitude", selectedCoordinateLongitude)
+
+        
+        
+        //http://stackoverflow.com/questions/26142441/cllocationdegrees-to-string-variable-in-swift
+        //http://stackoverflow.com/questions/26347777/swift-how-to-remove-optional-string-character
+        
+       // var selectedCoordinateLatitudeString:String!
+        selectedCoordinateLatitudeString = "\(selectedCoordinateLatitude)"
+        print("selectedCoordinateLatitudeString", selectedCoordinateLatitudeString)
+        
+        selectedCoordinateLongitudeString = "\(selectedCoordinateLongitude)"
+        print("selectedCoordinateLongitudeString", selectedCoordinateLongitudeString)
+
+        
         //let photoAlbumViewController = PhotoAlbumViewController()
         
         //let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
@@ -173,9 +203,32 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         //photoAlbumViewController.mapLongitude = "-105.589742638687"
         
         
-        //self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
+        self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
+        /*
+        //photoAlbumViewController.selectedLatitude = view.annotation?.coordinate.latitude
+        var selectedCoordinateLatitude:CLLocationDegrees!
+        selectedCoordinateLatitude  = view.annotation?.coordinate.latitude
+        
+        
+        print("selectedCoordinateLatitude", selectedCoordinateLatitude)
+        
+        
+        //http://stackoverflow.com/questions/26142441/cllocationdegrees-to-string-variable-in-swift
+        //http://stackoverflow.com/questions/26347777/swift-how-to-remove-optional-string-character
+        
+        var selectedCoordinateLatitudeString:String!
+            selectedCoordinateLatitudeString = "\(selectedCoordinateLatitude)"
+        print("selectedCoordinateLatitudeString", selectedCoordinateLatitudeString)
+       */
+        photoAlbumViewController.selectedLatitude = selectedCoordinateLatitudeString
+        photoAlbumViewController.selectedLongitude = selectedCoordinateLongitudeString
+
+        //photoAlbumViewController.selectedLongitude = self.selectedLongitude
+        
+        
         
         performSegueWithIdentifier("showPhotoAlbum", sender: self)
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -235,6 +288,14 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         print("prepareForSegue")
         let controller = segue.destinationViewController as! PhotoAlbumViewController
+        //controller.selectedLatitude = self.selectedLatitude as NSString
+        
+        //controller.selectedLatitude = self.selectedLatitude
+        controller.selectedLatitude = selectedCoordinateLatitudeString
+        controller.selectedLongitude = selectedCoordinateLongitudeString
+
+        
+        //controller.selectedLongitude = self.selectedLongitude
         
     }
  
