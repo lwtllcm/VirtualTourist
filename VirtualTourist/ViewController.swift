@@ -263,7 +263,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
 
         annotation.coordinate = tappedCoordinate
         
-        annotation.title = "test annotation"
+       // annotation.title = "test annotation"
         
         
         //self.mapView.addAnnotation(annotation)

@@ -20,8 +20,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
     
-    var mapLatitude = "12.820669628231199"
-    var mapLongitude = "-84.372921928403002"
+    //var mapLatitude = "12.820669628231199"
+    //var mapLongitude = "-84.372921928403002"
     
     var returnedPhotoURLs = []
     var returnedPhotosArray:NSMutableArray = []
@@ -209,6 +209,34 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         print("PhotoAlbumViewController viewWillAppear")
+        
+        //var mapViewCoordinate2D = CLLocationCoordinate2D(latitude:19.727220723628498, longitude:-99.232355927663505), span:mapSpan))
+        let mapSpan = MKCoordinateSpanMake(2.0, 2.0)
+        
+        let mapRegion =
+            MKCoordinateRegion(center: CLLocationCoordinate2D(latitude:CLLocationDegrees(selectedLatitude)!,
+            longitude:CLLocationDegrees(selectedLongitude)!), span: mapSpan)
+        
+        
+        //mapView.centerCoordinate.latitude = 19.727220723628498
+        //mapView.centerCoordinate.longitude = -99.232355927663505
+        
+        mapView.setRegion(mapRegion, animated: true)
+        
+        
+        let annotation = MKPointAnnotation()
+        
+        annotation.coordinate =
+            CLLocationCoordinate2D(latitude:CLLocationDegrees(selectedLatitude)!, longitude:CLLocationDegrees(selectedLongitude)!)
+        
+        
+        //mapView.addPin("location", latitude: 19.727220723628498 , longitude: -99.232355927663505 )
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.mapView.addAnnotation(annotation)
+        }
+        
+        
         
         
         let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
