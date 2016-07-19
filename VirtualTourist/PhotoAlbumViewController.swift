@@ -56,6 +56,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         super.viewDidLoad()
         print("PhotoAlbumViewController viewDidLoad")
         
+        self.navigationController?.navigationBarHidden = false
+        
         print("passed selectedLatitude ", self.selectedLatitude as NSString)
         print("passed selectedLongitude ", self.selectedLongitude as NSString)
 

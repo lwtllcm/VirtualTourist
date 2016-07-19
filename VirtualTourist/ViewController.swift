@@ -203,7 +203,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         //photoAlbumViewController.mapLongitude = "-105.589742638687"
         
         
-        self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
+       // self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
+        
         /*
         //photoAlbumViewController.selectedLatitude = view.annotation?.coordinate.latitude
         var selectedCoordinateLatitude:CLLocationDegrees!
@@ -220,6 +221,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
             selectedCoordinateLatitudeString = "\(selectedCoordinateLatitude)"
         print("selectedCoordinateLatitudeString", selectedCoordinateLatitudeString)
        */
+        
+        
         photoAlbumViewController.selectedLatitude = selectedCoordinateLatitudeString
         photoAlbumViewController.selectedLongitude = selectedCoordinateLongitudeString
 
@@ -291,6 +294,9 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         //controller.selectedLatitude = self.selectedLatitude as NSString
         
         //controller.selectedLatitude = self.selectedLatitude
+        
+        
+       
         controller.selectedLatitude = selectedCoordinateLatitudeString
         controller.selectedLongitude = selectedCoordinateLongitudeString
 
