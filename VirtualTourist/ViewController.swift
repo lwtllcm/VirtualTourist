@@ -294,6 +294,9 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         controller.selectedLatitude = selectedCoordinateLatitudeString
         controller.selectedLongitude = selectedCoordinateLongitudeString
 
+        print("controller.selectedLatitude", controller.selectedLatitude)
+        print("controller.selectedLongitude", controller.selectedLongitude)
+
         
         //controller.selectedLongitude = self.selectedLongitude
         

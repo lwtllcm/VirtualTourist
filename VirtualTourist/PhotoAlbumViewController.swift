@@ -73,9 +73,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
        // let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
        // let stack = delegate.stack
         
-        let fr = NSFetchRequest(entityName: "Pin")
+       // let fr = NSFetchRequest(entityName: "Pin")
  
-        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true)]
+       // fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true)]
 
         
         //let testLatitudePredicate = 52.247849103093301
@@ -220,7 +220,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         //let testLatitudePredicate = 52.247849103093301
         //let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
         
-        let latitudePredicate = NSPredicate(format: "latitude == 34.272264291400298")
+        //let latitudePredicate = NSPredicate(format: "latitude == 34.272264291400298")
         // let longitudePredicate = NSPredicate(format: "longitude = %@", mapLongitude)
         
         // let andPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [latitudePredicate, longitudePredicate])
@@ -230,7 +230,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         
         
-         fr.predicate = latitudePredicate
+         //fr.predicate = latitudePredicate
          
          print("fr", fr)
          

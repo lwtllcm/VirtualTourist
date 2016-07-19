@@ -43,7 +43,7 @@
                     <navigationItem key="navigationItem" id="K8S-Uc-KPu"/>
                     <connections>
                         <outlet property="mapView" destination="1x4-DO-yjQ" id="kwT-mi-kh8"/>
-                        <segue destination="jU6-kR-6Du" kind="show" identifier="showPhotoAlbum" id="oGF-Vc-saH"/>
+                        <segue destination="jU6-kR-6Du" kind="show" identifier="showPhotoAlbum" id="UJC-02-8nT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -53,9 +53,9 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1357.5" y="352.5"/>
+            <point key="canvasLocation" x="1630" y="352"/>
         </scene>
-        <!--PhotoAlbum-->
+        <!--Photo Album-->
         <scene sceneID="zvf-m2-lMI">
             <objects>
                 <viewController storyboardIdentifier="PhotoAlbumViewController" id="jU6-kR-6Du" customClass="PhotoAlbumViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
@@ -69,6 +69,9 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Rwu-CR-8fA">
                                 <rect key="frame" x="10" y="80" width="570" height="131"/>
+                                <connections>
+                                    <outlet property="delegate" destination="jU6-kR-6Du" id="uQ3-BF-ozC"/>
+                                </connections>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LiZ-YY-eO5">
                                 <rect key="frame" x="10" y="255" width="545" height="222"/>
@@ -107,7 +110,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="PhotoAlbum" id="sdo-54-kjI"/>
+                    <navigationItem key="navigationItem" title="Photo Album" id="sdo-54-kjI"/>
                     <connections>
                         <outlet property="collectionView" destination="LiZ-YY-eO5" id="uTE-qM-HdU"/>
                         <outlet property="flowLayout" destination="kvo-4x-RkS" id="ej8-PT-zAO"/>
@@ -116,7 +119,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EVb-DQ-XOY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2399" y="388"/>
+            <point key="canvasLocation" x="2292" y="352"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="t3V-ic-UqM">
