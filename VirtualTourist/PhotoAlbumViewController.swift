@@ -25,19 +25,21 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     var returnedPhotoURLs = []
     var returnedPhotosArray:NSMutableArray = []
+   
     
+    //latitude and longitude passed from view controller
     var selectedLatitude = ""
     var selectedLongitude = ""
     
+    //fetchedResultsController
     var fetchedResultsController:NSFetchedResultsController? {
         didSet {
-            
             print("PhotoAlbumViewController fetchedResultsController ")
             executeSearch()
         }
     }
     
-    
+    //executeSearch
     func executeSearch() {
         print("executeSearch")
         if let fc = fetchedResultsController {
@@ -51,82 +53,50 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         }
     }
    
-    
+    //viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         print("PhotoAlbumViewController viewDidLoad")
         
-        self.navigationController?.navigationBarHidden = false
+        //self.navigationController?.navigationBarHidden = false
         
         print("passed selectedLatitude ", self.selectedLatitude as NSString)
         print("passed selectedLongitude ", self.selectedLongitude as NSString)
 
-        
-       // print("mapLatitude", mapLatitude)
-       // print("mapLongitude", mapLongitude)
-        
+        //collectionView setup
         let space: CGFloat = 3.0
         flowLayout.minimumLineSpacing = space
         flowLayout.minimumLineSpacing = space        
         flowLayout.itemSize = CGSizeMake(100.0, 100.0)
         
-      
-        
-       // let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
-       // let stack = delegate.stack
-        
-       // let fr = NSFetchRequest(entityName: "Pin")
+        //fetch request setup
+        let fr = NSFetchRequest(entityName: "Pin")
  
-       // fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true)]
-
+        fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
         
-        //let testLatitudePredicate = 52.247849103093301
-                //let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
-        //let latitudePredicate = NSPredicate(format: "latitude == 34.272264291400298")
-        
-       // let longitudePredicate = NSPredicate(format: "longitude = %@", mapLongitude)
-        
-       // let andPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [latitudePredicate, longitudePredicate])
-        
-            //fr.predicate = andPredicate
-     
-        
-        
-        /*
-        fr.predicate = latitudePredicate
-
-        print("fr", fr)
-
+        let stack = delegate.stack
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
-        print("PhotoAlbumViewController fetched results count",fetchedResultsController!.fetchedObjects?.count)
+        //print("pin fetchedResultsController?.fetchedObjects",fetchedResultsController?.fetchedObjects)
+        
+        fetchedResultsController?.fetchedObjects
        
-
         
-        let testImage = UIImage(data: NSData(contentsOfURL: NSURL(string:"https://farm9.staticflickr.com/8619/28026418440_2b155fb1a4.jpg")!)!)
-       // self.returnedPhotosArray.addObject(testImage!)
-       // self.returnedPhotosArray.addObject(testImage!)
-       // self.returnedPhotosArray.addObject(testImage!)
-
-        //print("returnedPhotosArray with initial hard coded image",returnedPhotosArray.count)
-
-        
-        
+        //check for fetched objects
         if fetchedResultsController?.fetchedObjects?.count == 0 {
-            print("fetchedResultsController?.fetchedObjects?.count == 0")
+            print("Pin fetchedResultsController?.fetchedObjects?.count == 0")
         }
         else {
         
         for result in (fetchedResultsController?.fetchedObjects)! {
             
             if let thisPhoto = result.valueForKey("photos") {
-                print("photos found count", thisPhoto.count)
+                print("photos found count",  thisPhoto.count)
+                
                 if thisPhoto.count == 0 {
-                    
-                   // getPhotos()
-  
                     
                     getPhotos {(result, error) in
                     
@@ -137,7 +107,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                         print("data after getPhotos - in completion handler", result)
                             var theseReturnedPhotoURLs = []
                             theseReturnedPhotoURLs = (result.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
-                            //print("theseReturnedPhotoURLs", theseReturnedPhotoURLs)
+
                             for photoURL in theseReturnedPhotoURLs {
                                 print("photoURL", photoURL)
                                 self.returnedPhotosArray.addObject(photoURL)
@@ -146,42 +116,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                         }
                         
                         
-                    /*
-                    let parsedResult: AnyObject!
-                    do {
-                        
-                        parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-                        
-                        
-                        self.returnedPhotoURLs = (parsedResult.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
-                        print(self.returnedPhotoURLs)
-                        
-                        //var photoURLcount = 0
-                        
-                        for photoURL in self.returnedPhotoURLs {
-                            
-                            self.returnedPhotosArray.addObject(photoURL)
-                            print("self.returnedPhotosArray", self.returnedPhotosArray)
-                            
-                            
-                        }
-                        
-                        
-                        
-                    } catch {
-                        displayError("Could not parse the data as JSON: '\(data)'")
-                        return
-                    }
-                    
-                    */
-                }
-                
-
-                    
-                    
-                    
-                    
-                    //self.collectionView.reloadData()
+                  }
                     print("returnedPhotosArray.count after getPhotos",self.returnedPhotosArray.count)
                     
                 }
@@ -194,35 +129,23 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
  
       }
  
- */
+
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
+    //viewWillAppear
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         print("PhotoAlbumViewController viewWillAppear")
         
-        //var mapViewCoordinate2D = CLLocationCoordinate2D(latitude:19.727220723628498, longitude:-99.232355927663505), span:mapSpan))
+        //show focused map for selected pin
         let mapSpan = MKCoordinateSpanMake(2.0, 2.0)
         
         let mapRegion =
             MKCoordinateRegion(center: CLLocationCoordinate2D(latitude:CLLocationDegrees(selectedLatitude)!,
             longitude:CLLocationDegrees(selectedLongitude)!), span: mapSpan)
         
-        
-        //mapView.centerCoordinate.latitude = 19.727220723628498
-        //mapView.centerCoordinate.longitude = -99.232355927663505
-        
         mapView.setRegion(mapRegion, animated: true)
-        
         
         let annotation = MKPointAnnotation()
         
@@ -230,146 +153,76 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             CLLocationCoordinate2D(latitude:CLLocationDegrees(selectedLatitude)!, longitude:CLLocationDegrees(selectedLongitude)!)
         
         
-        //mapView.addPin("location", latitude: 19.727220723628498 , longitude: -99.232355927663505 )
-        
         dispatch_async(dispatch_get_main_queue()) {
             self.mapView.addAnnotation(annotation)
         }
-        
-        
         
         
         let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let stack = delegate.stack
         
         let fr = NSFetchRequest(entityName: "Pin")
-        
         fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true)]
         
+         //print("fr", fr)
         
-        //let testLatitudePredicate = 52.247849103093301
-        //let latitudePredicate = NSPredicate(format: "latitude == 52.247849103093301")
-        
-        //let latitudePredicate = NSPredicate(format: "latitude == 34.272264291400298")
-        // let longitudePredicate = NSPredicate(format: "longitude = %@", mapLongitude)
-        
-        // let andPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [latitudePredicate, longitudePredicate])
-        
-        //fr.predicate = andPredicate
-        
-        
-        
-        
-         //fr.predicate = latitudePredicate
-         
-         print("fr", fr)
-         
-         
          fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
          
-         print("PhotoAlbumViewController fetched results count",fetchedResultsController!.fetchedObjects?.count)
+         //print("PhotoAlbumViewController fetched results count",fetchedResultsController!.fetchedObjects?.count)
          
-         
-         
-         let testImage = UIImage(data: NSData(contentsOfURL: NSURL(string:"https://farm9.staticflickr.com/8619/28026418440_2b155fb1a4.jpg")!)!)
-         // self.returnedPhotosArray.addObject(testImage!)
-         // self.returnedPhotosArray.addObject(testImage!)
-         // self.returnedPhotosArray.addObject(testImage!)
-         
-         //print("returnedPhotosArray with initial hard coded image",returnedPhotosArray.count)
-         
-         
-         
+        
          if fetchedResultsController?.fetchedObjects?.count == 0 {
-         print("fetchedResultsController?.fetchedObjects?.count == 0")
+            print("no fetched results")
          }
          else {
          
-         for result in (fetchedResultsController?.fetchedObjects)! {
+            for result in (fetchedResultsController?.fetchedObjects)! {
+                if let thisPhoto = result.valueForKey("photos") {
+                    print("photos found count", thisPhoto.count)
+                    if thisPhoto.count == 0 {
          
-         if let thisPhoto = result.valueForKey("photos") {
-         print("photos found count", thisPhoto.count)
-         if thisPhoto.count == 0 {
+                        getPhotos {(result, error) in
          
-         // getPhotos()
+                            if (error != nil) {
+                                print("error returned from getPhotos")
+                            }
+                            else {
+                                print("data after getPhotos - in completion handler", result)
+                                var theseReturnedPhotoURLs = []
+                                theseReturnedPhotoURLs = (result.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
          
-         
-         getPhotos {(result, error) in
-         
-         if (error != nil) {
-         print("error returned from getPhotos")
-         }
-         else {
-         print("data after getPhotos - in completion handler", result)
-         var theseReturnedPhotoURLs = []
-         theseReturnedPhotoURLs = (result.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
-         //print("theseReturnedPhotoURLs", theseReturnedPhotoURLs)
-         for photoURL in theseReturnedPhotoURLs {
-         print("photoURL", photoURL)
-         self.returnedPhotosArray.addObject(photoURL)
-         print("self.returnedPhotosArray", self.returnedPhotosArray)
+            
+                                for photoURL in theseReturnedPhotoURLs {
+                                    print("photoURL", photoURL)
+                                    self.returnedPhotosArray.addObject(photoURL)
+                                    print("self.returnedPhotosArray", self.returnedPhotosArray)
             
             
-            dispatch_async(dispatch_get_main_queue()) {
-                self.collectionView.reloadData()
+                                    self.addPhotos("location", latitude: self.selectedLatitude, longitude: self.selectedLongitude, photo: (photoURL as!  String))
+         
+            
+                                    dispatch_async(dispatch_get_main_queue()) {
+                                        self.collectionView.reloadData()
+                                    }
+                                }
+                            }
+   
+                            
+                        }
+         
+         
+                        print("returnedPhotosArray.count after getPhotos",self.returnedPhotosArray.count)
+         
+                    }
+         
+                }
+                else {
+                    print("photo not found")
+                }
             }
-         }
-}
-         
-         
-         /*
-         let parsedResult: AnyObject!
-         do {
-         
-         parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-         
-         
-         self.returnedPhotoURLs = (parsedResult.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
-         print(self.returnedPhotoURLs)
-         
-         //var photoURLcount = 0
-         
-         for photoURL in self.returnedPhotoURLs {
-         
-         self.returnedPhotosArray.addObject(photoURL)
-         print("self.returnedPhotosArray", self.returnedPhotosArray)
-         
          
          }
          
-         
-         
-         } catch {
-         displayError("Could not parse the data as JSON: '\(data)'")
-         return
-         }
-         
-         */
-         }
-         
-         
-         
-         
-         
-         
-         //self.collectionView.reloadData()
-         print("returnedPhotosArray.count after getPhotos",self.returnedPhotosArray.count)
-         
-         }
-         
-         }
-         else {
-         print("photo not found")
-         }
-         }
-         
-         }
-         
-        
-        
-        
-        //self.collectionView.delegate = self
-        //self.collectionView.reloadData()
         
         dispatch_async(dispatch_get_main_queue()) {
             self.collectionView.reloadData()
@@ -377,6 +230,26 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
     }
  
+    
+    
+    
+    
+    func addPhotos(location:String, latitude:String, longitude:String, photo:String) {
+        
+        
+        let thisPin = Pin(location: "location", latitude: selectedLatitude, longitude: selectedLongitude, context: fetchedResultsController!.managedObjectContext)
+        
+        
+        let testPhotoToAdd = "https://farm9.staticflickr.com/8619/28026418440_2b155fb1a4.jpg"
+        
+        let newPhoto = Photo(imageData: photo, context: fetchedResultsController!.managedObjectContext )
+        
+        newPhoto.pin = thisPin
+        print("photo added to coredata")
+        
+        
+        }
+    
     
     
     func getPhotos(completionHandlerForGET:(result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
@@ -401,25 +274,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
        // var bboxSelectedLatitude = ((selectedLatitude as NSString) as String)
         print(bboxSelectedLatitude)
         bboxString = bboxString + (bboxSelectedLatitude as String)
-       // print("bbox selectedLatitude", selectedLatitude as NSString)
-        /*
-        print(bboxString)
-        
-        bboxString = bboxString + ",bbox=-123.8587455078125,"
-        
-        print(bboxString)
-        
-        bboxString = bboxString + (bboxSelectedLatitude as String)
-        // print("bbox selectedLatitude", selectedLatitude as NSString)
-        
-        print(bboxString)
- */
-        
-        /*
-        bboxString.stringByAppendingString(bboxSelectedLatitude as String)
-        print("bbox selectedLatitude", selectedLatitude as NSString)
-        print(bboxString)
-*/
+
         
         var flickrSearchURLString = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&"
         flickrSearchURLString = flickrSearchURLString + bboxString
@@ -460,34 +315,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             
             self.convertDataWithCompletionHandler(data!, completionHandlerForConvertData: completionHandlerForGET)
             print("data returned")
-          /*
-            let parsedResult: AnyObject!
-            do {
-                
-                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
 
-                
-                self.returnedPhotoURLs = (parsedResult.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
-                print(self.returnedPhotoURLs)
-
-                //var photoURLcount = 0
-                
-                for photoURL in self.returnedPhotoURLs {
-                    
-                    self.returnedPhotosArray.addObject(photoURL)
-                    print("self.returnedPhotosArray", self.returnedPhotosArray)
-                    
-                    
-                               }
-               
-
-                
-            } catch {
-                displayError("Could not parse the data as JSON: '\(data)'")
-                return
-            }
- 
-         */
         }
  
 
@@ -569,6 +397,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         return task
     }
     
+    
+    
+    
+    
+    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print("collectionView numberOfItemsInSection", self.returnedPhotosArray.count)
 
@@ -615,6 +448,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         return photoCell
     }
+    
 }
 
 

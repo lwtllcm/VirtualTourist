@@ -34,7 +34,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         if let fc = fetchedResultsController {
             do {
                 try fc.performFetch()
-                //print(fc.fetchedObjects)
+
             }
             catch {
                 print ("error in performFetch")
@@ -53,6 +53,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         
         let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let stack = delegate.stack
+        
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         print("ViewController fr", fr)
         
@@ -73,18 +74,15 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
             }
         }
         
-        
-        /*
-        var thisCoordinate = CLLocationCoordinate2D()
-        thisCoordinate.latitude = 33.955190025712511
-        thisCoordinate.longitude = -118.07473099889084
-        
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = thisCoordinate
-        self.mapView.addAnnotation(annotation)
-        */
-        
   }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        
+    }
+    
+    
     
     func setAnnotations (pin:Pin) {
         print("setAnnotations")
@@ -112,60 +110,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     }
     
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-       // let allAnnotations = self.mapView.annotations
-        
-        
-        
-        
-    }
 
-    /*
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        print("viewForAnnotation")
-        let reuseId = "pin"
-        
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
-        if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView?.pinTintColor = UIColor.greenColor()
-            pinView?.canShowCallout = false
-            
-        }
-        else {
-            print("pinView not nil")
-            //let index = 0
-            //pinView?.annotation?.latitude = "33.955190025712511"
-            //pinView?.annotation?.coordinate.longitude = "-118.07473099889084"
-            //pinView?.annotation = annotation
-            
-            var thisCoordinate = CLLocationCoordinate2D()
-            thisCoordinate.latitude = 33.955190025712511
-            thisCoordinate.longitude = -118.07473099889084
-            
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = thisCoordinate
-            self.mapView.addAnnotation(annotation)
-        }
-        return pinView
-        
-    }
-*/
-    
-  /*
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if (control == view.rightCalloutAccessoryView) {
-        
-        print("annotationTapped")
-           // let photoAlbumViewController = PhotoAlbumViewController()
-           // self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
-            
-        }
-    }
- */
-    
+   
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         print("annotationView selected")
         
@@ -263,12 +209,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
 
         annotation.coordinate = tappedCoordinate
         
-       // annotation.title = "test annotation"
-        
-        
-        //self.mapView.addAnnotation(annotation)
-        
-        //self.addPin("newPin")
         
         self.addPin("location", latitude: tappedLatitude , longitude: tappedLongitude )
         
@@ -276,8 +216,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
             self.mapView.addAnnotation(annotation)
             
         }
-        
-        
         
     }
     
@@ -291,22 +229,60 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         print("prepareForSegue")
         let controller = segue.destinationViewController as! PhotoAlbumViewController
-        //controller.selectedLatitude = self.selectedLatitude as NSString
         
-        //controller.selectedLatitude = self.selectedLatitude
-        
-        
-       
         controller.selectedLatitude = selectedCoordinateLatitudeString
         controller.selectedLongitude = selectedCoordinateLongitudeString
 
         print("controller.selectedLatitude", controller.selectedLatitude)
         print("controller.selectedLongitude", controller.selectedLongitude)
-
-        
-        //controller.selectedLongitude = self.selectedLongitude
         
     }
+    
+    
+    /*
+     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+     print("viewForAnnotation")
+     let reuseId = "pin"
+     
+     var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+     if pinView == nil {
+     pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+     pinView?.pinTintColor = UIColor.greenColor()
+     pinView?.canShowCallout = false
+     
+     }
+     else {
+     print("pinView not nil")
+     //let index = 0
+     //pinView?.annotation?.latitude = "33.955190025712511"
+     //pinView?.annotation?.coordinate.longitude = "-118.07473099889084"
+     //pinView?.annotation = annotation
+     
+     var thisCoordinate = CLLocationCoordinate2D()
+     thisCoordinate.latitude = 33.955190025712511
+     thisCoordinate.longitude = -118.07473099889084
+     
+     let annotation = MKPointAnnotation()
+     annotation.coordinate = thisCoordinate
+     self.mapView.addAnnotation(annotation)
+     }
+     return pinView
+     
+     }
+     */
+    
+    /*
+     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+     if (control == view.rightCalloutAccessoryView) {
+     
+     print("annotationTapped")
+     // let photoAlbumViewController = PhotoAlbumViewController()
+     // self.presentViewController(photoAlbumViewController, animated: true, completion: nil)
+     
+     }
+     }
+     */
+    
  
 }
 

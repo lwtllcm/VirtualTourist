@@ -32,6 +32,7 @@
 		5B7EB83A1D237836008DCAF1 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		5B7EB83F1D29A302008DCAF1 /* CoreDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataController.swift; sourceTree = "<group>"; };
 		5B7EB8411D2A0414008DCAF1 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		5B967ACD1D3F11A200101B72 /* Model 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 3.xcdatamodel"; sourceTree = "<group>"; };
 		5BD9A76F1D13A9B700D3BDCE /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BD9A7721D13A9B700D3BDCE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5BD9A7741D13A9B700D3BDCE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -354,10 +355,11 @@
 		5BD9A7841D13AE1000D3BDCE /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				5B967ACD1D3F11A200101B72 /* Model 3.xcdatamodel */,
 				5B7EB8361D237704008DCAF1 /* Model 2.xcdatamodel */,
 				5BD9A7851D13AE1000D3BDCE /* Model.xcdatamodel */,
 			);
-			currentVersion = 5B7EB8361D237704008DCAF1 /* Model 2.xcdatamodel */;
+			currentVersion = 5B967ACD1D3F11A200101B72 /* Model 3.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
