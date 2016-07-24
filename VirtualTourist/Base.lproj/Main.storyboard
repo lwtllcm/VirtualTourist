@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -74,7 +75,7 @@
                                 </connections>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LiZ-YY-eO5">
-                                <rect key="frame" x="10" y="255" width="545" height="222"/>
+                                <rect key="frame" x="10" y="255" width="545" height="240"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="kvo-4x-RkS">
                                     <size key="itemSize" width="170" height="134"/>
@@ -107,11 +108,24 @@
                                     <outlet property="delegate" destination="jU6-kR-6Du" id="yoH-l8-x2c"/>
                                 </connections>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dlV-rw-791">
+                                <rect key="frame" x="10" y="520" width="570" height="41"/>
+                                <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="newCollectionPressed:" destination="jU6-kR-6Du" eventType="touchUpInside" id="R2u-pM-l4k"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4BM-Ta-2t2" firstAttribute="top" secondItem="dlV-rw-791" secondAttribute="bottom" constant="39" id="J3a-bg-VuG"/>
+                            <constraint firstItem="dlV-rw-791" firstAttribute="trailing" secondItem="Mr0-jg-l7f" secondAttribute="trailingMargin" id="KaZ-CG-fSR"/>
+                            <constraint firstItem="dlV-rw-791" firstAttribute="leading" secondItem="Mr0-jg-l7f" secondAttribute="leadingMargin" constant="-10" id="QWP-Lv-NFB"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Photo Album" id="sdo-54-kjI"/>
                     <connections>
+                        <outlet property="NewCollectionButton" destination="dlV-rw-791" id="zMR-vx-zpF"/>
                         <outlet property="collectionView" destination="LiZ-YY-eO5" id="uTE-qM-HdU"/>
                         <outlet property="flowLayout" destination="kvo-4x-RkS" id="ej8-PT-zAO"/>
                         <outlet property="mapView" destination="Rwu-CR-8fA" id="4BO-Xu-Lrd"/>

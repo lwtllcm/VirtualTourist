@@ -24,7 +24,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     var fetchedResultsController:NSFetchedResultsController? {
         didSet {
             //fetchedResultsController?.delegate = self
-            print("fetchedResultsController didSet")
+            //print("fetchedResultsController didSet")
             executeSearch()
         }
     }
@@ -55,11 +55,11 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         let stack = delegate.stack
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
-        print("ViewController fr", fr)
+        //print("ViewController fr", fr)
         
         
         //print(fetchedResultsController.fetchedObjects)
-        print("pin count",fetchedResultsController!.fetchedObjects?.count)
+        //print("pin count",fetchedResultsController!.fetchedObjects?.count)
         
         if fetchedResultsController?.fetchedObjects?.count == 0 {
             print("no fetched results")
@@ -92,7 +92,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         let long1 = CLLocationDegrees(pin.longitude!)
         print(long1)
         let coordinate1 = CLLocationCoordinate2D(latitude: lat1!, longitude: long1!)
-        print(coordinate1)
+        //print(coordinate1)
         let annotation = MKPointAnnotation()
         
         annotation.coordinate = coordinate1
@@ -122,8 +122,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         selectedCoordinateLongitude  = view.annotation?.coordinate.longitude
         
         
-        print("selectedCoordinateLatitude", selectedCoordinateLatitude)
-        print("selectedCoordinateLongitude", selectedCoordinateLongitude)
+        //print("selectedCoordinateLatitude", selectedCoordinateLatitude)
+        //print("selectedCoordinateLongitude", selectedCoordinateLongitude)
 
         
         
@@ -132,10 +132,10 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         
        // var selectedCoordinateLatitudeString:String!
         selectedCoordinateLatitudeString = "\(selectedCoordinateLatitude)"
-        print("selectedCoordinateLatitudeString", selectedCoordinateLatitudeString)
+       // print("selectedCoordinateLatitudeString", selectedCoordinateLatitudeString)
         
         selectedCoordinateLongitudeString = "\(selectedCoordinateLongitude)"
-        print("selectedCoordinateLongitudeString", selectedCoordinateLongitudeString)
+        //print("selectedCoordinateLongitudeString", selectedCoordinateLongitudeString)
 
         
         //let photoAlbumViewController = PhotoAlbumViewController()
@@ -201,9 +201,9 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
 
         let tappedLatitude = String(tappedCoordinate.latitude)
         let tappedLongitude = String(tappedCoordinate.longitude)
-        print(tappedCoordinate)
-        print(tappedLatitude)
-        print(tappedLongitude)
+        //print("tappedCoordinate",tappedCoordinate)
+        //print("tappedLatitude", tappedLatitude)
+        //print("tappedLongitude", tappedLongitude)
 
         let annotation = MKPointAnnotation()
 
@@ -228,13 +228,65 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         print("prepareForSegue")
-        let controller = segue.destinationViewController as! PhotoAlbumViewController
         
-        controller.selectedLatitude = selectedCoordinateLatitudeString
-        controller.selectedLongitude = selectedCoordinateLongitudeString
+        if segue.identifier == "showPhotoAlbum" {
+            if let photoAlbumViewController = segue.destinationViewController as? PhotoAlbumViewController {
+            
+        
+        //let controller = segue.destinationViewController as! PhotoAlbumViewController
+        
+        //controller.selectedLatitude = selectedCoordinateLatitudeString
+        //controller.selectedLongitude = selectedCoordinateLongitudeString
 
-        print("controller.selectedLatitude", controller.selectedLatitude)
-        print("controller.selectedLongitude", controller.selectedLongitude)
+        //print("controller.selectedLatitude", controller.selectedLatitude)
+        //print("controller.selectedLongitude", controller.selectedLongitude)
+        
+        
+        //let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        //let stack = delegate.stack
+        
+        let fr = NSFetchRequest(entityName: "Pin")
+        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true), NSSortDescriptor(key: "longitude", ascending:  true)]
+        
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let stack = delegate.stack
+
+        let pred1 = NSPredicate(format: "latitude like %@", selectedCoordinateLatitudeString)
+         //       print(pred1)
+        let pred2 = NSPredicate(format: "longitude like %@", selectedCoordinateLongitudeString)
+        //print(pred2)
+                
+        
+        //http://stackoverflow.com/questions/24855159/nspredicate-with-swift-and-core-data
+        let compoundPredicate = NSCompoundPredicate.init(andPredicateWithSubpredicates: ([pred1, pred2]))
+                
+        fr.predicate = compoundPredicate
+          //      fr.predicate = pred1
+         print(fr)
+        
+        //let pin = fetchedResultsController?.objectAtIndexPath(<#T##indexPath: NSIndexPath##NSIndexPath#>)
+        
+        //print("fr", fr)
+                
+                
+        
+       fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        ////////
+        
+        
+        
+        //print("PhotoAlbumViewController fetched results count",fetchedResultsController!.fetchedObjects?.count)
+        
+                print("testFetchedResultsController.fetchedObjects in prepareForSegue", fetchedResultsController!.fetchedObjects)
+       
+                photoAlbumViewController.testFetchedResultsController = fetchedResultsController
+                
+        
+        
+            }
+        
+        }
         
     }
     
