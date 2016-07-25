@@ -454,11 +454,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
   
         let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
-  
+/*
        // let fetchedObjects = testFetchedResultsController?.fetchedObjects
 
         //let  thisPin = fetchedObjects![0] as! Pin
-/*
+
         let thisPin = testFetchedResultsController?.objectAtIndexPath(indexPath) as! Pin
         print("thisPin", thisPin)
         let thisPinPhotos = thisPin.photos
@@ -479,9 +479,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             }
             
         }
-*/
-        
-        
+
+ */
+
 
         if self.returnedPhotosArray.count > 0 {
             print("in cellForItemAtIndexPath self.returnedPhotosArray.count", self.returnedPhotosArray.count)
@@ -502,7 +502,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
  
         }
  
-       
+   
      
         
         return photoCell
