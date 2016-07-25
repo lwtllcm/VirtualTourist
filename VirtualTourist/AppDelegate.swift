@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var returnedPhotosArray  = []
     
 
-    //var sharedSession = NSURLSession.sharedSession()
+    var sharedSession = NSURLSession.sharedSession()
     
     func preloadData() {
         do {

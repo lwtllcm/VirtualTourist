@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B59681C1D45645900F84BB3 /* GetPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B59681B1D45645900F84BB3 /* GetPhotos.swift */; };
 		5B7EB83B1D237836008DCAF1 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7EB8371D237836008DCAF1 /* Photo+CoreDataProperties.swift */; };
 		5B7EB83C1D237836008DCAF1 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7EB8381D237836008DCAF1 /* Photo.swift */; };
 		5B7EB83D1D237836008DCAF1 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7EB8391D237836008DCAF1 /* Pin+CoreDataProperties.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B59681B1D45645900F84BB3 /* GetPhotos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPhotos.swift; sourceTree = "<group>"; };
 		5B7EB8361D237704008DCAF1 /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
 		5B7EB8371D237836008DCAF1 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5B7EB8381D237836008DCAF1 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				5BD9A77E1D13A9B700D3BDCE /* Info.plist */,
 				5BD9A7A11D1A322800D3BDCE /* FlickrPhotos.swift */,
 				5B7EB8411D2A0414008DCAF1 /* PhotoCollectionViewCell.swift */,
+				5B59681B1D45645900F84BB3 /* GetPhotos.swift */,
 			);
 			path = VirtualTourist;
 			sourceTree = "<group>";
@@ -195,6 +198,7 @@
 				5B7EB83D1D237836008DCAF1 /* Pin+CoreDataProperties.swift in Sources */,
 				5BD9A7861D13AE1000D3BDCE /* Model.xcdatamodeld in Sources */,
 				5BD9A7951D15C3FB00D3BDCE /* CoreDataStack.swift in Sources */,
+				5B59681C1D45645900F84BB3 /* GetPhotos.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

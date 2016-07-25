@@ -21,8 +21,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     
     @IBOutlet weak var NewCollectionButton: UIButton!
-    //var mapLatitude = "12.820669628231199"
-    //var mapLongitude = "-84.372921928403002"
     
     var returnedPhotoURLs = []
     var returnedPhotosArray:NSMutableArray = []
@@ -48,7 +46,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         if let fc = fetchedResultsController {
             do {
                 try fc.performFetch()
-                //print("fetched objects",fc.fetchedObjects)
             }
             catch {
                 print ("error in performFetch")
@@ -61,10 +58,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         super.viewDidLoad()
         print("PhotoAlbumViewController viewDidLoad")
         
-        //self.navigationController?.navigationBarHidden = false
+        //print("passed selectedLatitude ", self.selectedLatitude as NSString)
+        //print("passed selectedLongitude ", self.selectedLongitude as NSString)
         
-        print("passed selectedLatitude ", self.selectedLatitude as NSString)
-        print("passed selectedLongitude ", self.selectedLongitude as NSString)
+        print("passed testFetchedResultsController.fetchedObjects", testFetchedResultsController?.fetchedObjects)
 
         //collectionView setup
         let space: CGFloat = 3.0
@@ -73,7 +70,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         flowLayout.itemSize = CGSizeMake(100.0, 100.0)
         
         //fetch request setup
-        
+        /*
         let fr = NSFetchRequest(entityName: "Pin")
  
         fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
@@ -84,14 +81,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
-        //print("pin fetchedResultsController?.fetchedObjects",fetchedResultsController?.fetchedObjects)
         
         fetchedResultsController?.fetchedObjects
-       
- 
-        
-        
- 
+       */
     }
     
     
@@ -131,20 +123,61 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
       
       
         
+        let  thisPin = fetchedObjects![0] as! Pin
+        print("thisPin", thisPin)
+        print("thisPin.photos", thisPin.photos?.count)
+        if (thisPin.photos?.count > 0) {
+            print(thisPin.photos)
+        }
+        else {
+        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
+            
+            if (error != nil) {
+                print("error returned from getPhotos")
+            }
+            else {
+                print("data after getPhotos - in completion handler", results)
+                
+                var theseReturnedPhotoURLs = []
+                theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                
+                
+                for photoURL in theseReturnedPhotoURLs {
+                    print("photoURL", photoURL)
+                    self.returnedPhotosArray.addObject(photoURL)
+                    print("self.returnedPhotosArray", self.returnedPhotosArray)
+                    
+                    //add new photos to core data
+                    //self.addPhotos("location", latitude: self.selectedLatitude, longitude: self.selectedLongitude, photoURLString: (photoURL as!  String))
+                    self.addPhotos(thisPin,photoURLString: (photoURL as!  String))
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.collectionView.reloadData()
+                    }
+
+            }
+        }
+                }
+            //}
+            
+            
+       // }
         
-        
-        
-         if fetchedResultsController?.fetchedObjects?.count == 0 {
+  /*
+         if testFetchedResultsController?.fetchedObjects?.count == 0 {
             print("no fetched results")
          }
          else {
          
-            for result in (fetchedResultsController?.fetchedObjects)! {
+            for result in (testFetchedResultsController?.fetchedObjects)! {
                 if let existingPhotosFound = result.valueForKey("photos") {
-                    print("existingPhotosFound count", existingPhotosFound.count)
+                    
+                    print(" ")
+                    print("existingPhotosFound ", existingPhotosFound)
                     if existingPhotosFound.count == 0 {
          
-                        getPhotos {(result, error) in
+                        //getPhotos {(result, error) in
+                        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
          
                             if (error != nil) {
                                 print("error returned from getPhotos")
@@ -161,7 +194,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                                     print("self.returnedPhotosArray", self.returnedPhotosArray)
             
                                     //add new photos to core data
-                                    self.addPhotos("location", latitude: self.selectedLatitude, longitude: self.selectedLongitude, photo: (photoURL as!  String))
+                                    self.addPhotos("location", latitude: self.selectedLatitude, longitude: self.selectedLongitude, photoURLString: (photoURL as!  String))
          
             
                                     dispatch_async(dispatch_get_main_queue()) {
@@ -192,9 +225,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         dispatch_async(dispatch_get_main_queue()) {
             self.collectionView.reloadData()
         }
-        
+*/
     }
  
+    }
     
     func getLatLon(pin:Pin) {
         print("getLatLon")
@@ -205,40 +239,100 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
     
-    func addPhotos(location:String, latitude:String, longitude:String, photo:String) {
+    func addPhotos(thisPin:Pin, photoURLString:String) {
+        print("addPhotos")
+        
+        print(thisPin)
+        print("thisPin.photos", thisPin.photos)
+        print(photoURLString)
         
         
-        //let thisPin = Pin(location: "location", latitude: selectedLatitude, longitude: selectedLongitude, context: fetchedResultsController!.managedObjectContext)
-       // let thisPin = fetchedResultsController?.objectAtIndexPath(indexPath)
         
         
-        let fetchedObjects = testFetchedResultsController?.fetchedObjects
+       // let fetchedObjects = testFetchedResultsController?.fetchedObjects
+
+       // let newPhoto = Photo(imageData: photoURLString, context: testFetchedResultsController!.managedObjectContext)
+        
+        
+        
+        let newPhoto = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: testFetchedResultsController!.managedObjectContext) as! Photo
+        newPhoto.imageData = photoURLString
+        
+        
+        
+        
+        print(thisPin)
+        print("thisPin.photos", thisPin.photos)
+
+        
+        
+        
+        /*
+        do {
+            try thisPin.managedObjectContext?.save()
+            print("thisPin after adding photos",thisPin)
+        } catch {
+         
+            let saveError = error as NSError
+            print(saveError)
+        }
+        */
+        
+        
+        /*
+        let entityPhoto = NSEntityDescription.entityForName("Photo", inManagedObjectContext: fetchedResultsController!.managedObjectContext)
+        let newPhoto = NSManagedObject(entity: entityPhoto!, insertIntoManagedObjectContext: fetchedResultsController!.managedObjectContext)
+        newPhoto.setValue(photoURLString, forKey: "imageData")
+        
+        thisPin.setValue(newPhoto, forKey: "photos")
+         
+         */
+        
+        do {
+            try thisPin.managedObjectContext?.save()
+            print(thisPin)
+            print("thisPin.photos afer save", thisPin.photos)
+        } catch {
+            let saveError = error as NSError
+            print(saveError)
+        }
        
-        
+       
+       /*
         for pin in fetchedObjects! {
             //print(pin)
             //self.getLatLon(pin as! Pin)
             
             
              print("about to add to thisPin", pin)
-            let newPhoto = Photo(imageData: photo, context: fetchedResultsController!.managedObjectContext )
+            print("adding this photoURLString", photoURLString)
+            
+            let newPhoto = Photo(imageData: photoURLString, context: fetchedResultsController!.managedObjectContext )
             newPhoto.pin = pin as! Pin
             print(pin)
+            
 
         }
-/*
-        print("about to add to thisPin", thisPin)
+ */
+       
         
-        //let testPhotoToAdd = "https://farm9.staticflickr.com/8619/28026418440_2b155fb1a4.jpg"
+        /*
+        let pin = fetchedObjects![0]
+        print(pin)
+        let managedContext = fetchedResultsController!.managedObjectContext
+        let entity = NSEntityDescription.entityForName("Photo", inManagedObjectContext: managedContext)
+        let newPhoto = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        newPhoto.setValue(photoURLString,forKey:"imageData")
+        do {
+            try managedContext.save()
+            pin.photos.append(newPhoto)
+        }
+        catch let error as NSError {
+            print("error in adding photo")
+        }
         
-        let newPhoto = Photo(imageData: photo, context: fetchedResultsController!.managedObjectContext )
-        
-        let fetchedObjects = testFetchedResultsController?.fetchedObjects
-        print("fetchedObjects", fetchedObjects)
-        
-        newPhoto.pin = thisPin
-        print("photo added to coredata")
-*/
+ */
+        //let newPhoto = Photo(entity: Photo() as! NSEntityDescription, insertIntoManagedObjectContext: fetchedResultsController!.managedObjectContext )
         
         }
     
@@ -260,10 +354,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         bboxString = bboxString + "&lat="
         
-       // -123.8587455078125&lat="
-       
         var bboxSelectedLatitude:NSString = selectedLatitude
-       // var bboxSelectedLatitude = ((selectedLatitude as NSString) as String)
+
         print(bboxSelectedLatitude)
         bboxString = bboxString + (bboxSelectedLatitude as String)
 
@@ -340,92 +432,65 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
 
-    
-    
-    func getImage(photoURLString:NSString) -> NSURLSessionDataTask {
-        print("getImage")
-        
-        
-        let session = NSURLSession.sharedSession()
-        
-        
-        
-        //let request = NSMutableURLRequest(URL: NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&bbox=-123.8587455078125,46.35308398800007,-120.5518607421875,48.587958419830336&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1&per_page=5")!)
-        
-        //print(request)
-        
-        let thisPhotoURL = NSURL(string:photoURLString as String)
-        
-        let task = session.dataTaskWithURL(thisPhotoURL!) {(data, response, error) in
-            func displayError(error: String) {
-                print(error)
-            }
-            
-            guard (error == nil) else {
-                //displayError("There was an error with your request: \(error)")
-                print("There was an error with your request: \(error)")
-                return
-            }
-            
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                //displayError("Your request returned a status code other than 2xx!")
-                print("Your request returned a status code other than 2xx!")
-                return
-            }
-            
-            guard let data = data else {
-                //displayError("No data was returned by the request!")
-                print("No data was returned by the request!")
-                
-                return
-            }
-            print("image returned")
-            
-            
-            self.returnedPhotosArray.addObject(data)
-            print(self.returnedPhotosArray.count)
-            
-            
-        }
-        
-        
-        task.resume()
-        return task
-    }
-    
-    
-    
-    
-    
- 
+  
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("collectionView numberOfItemsInSection", self.returnedPhotosArray.count)
+        print("collectionView returnedPhotosArray.count", self.returnedPhotosArray.count)
+        
+        
+        let fetchedObjects = testFetchedResultsController?.fetchedObjects
+       
+        let  thisPin = fetchedObjects![0] as! Pin
+        print("collectionView thisPin.photos.count", thisPin.photos?.count)
+        
+        
+       
 
-        
-        //self.returnedPhotosArray
-        
-        //return self.returnedPhotosArray.count
-        
-        return 1
+        //return (thisPin.photos?.count)!
+        return (self.returnedPhotosArray.count)
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         print("cellForItemAtIndexPath")
         
-        
+  
         let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
+  
+       // let fetchedObjects = testFetchedResultsController?.fetchedObjects
+
+        //let  thisPin = fetchedObjects![0] as! Pin
+/*
+        let thisPin = testFetchedResultsController?.objectAtIndexPath(indexPath) as! Pin
+        print("thisPin", thisPin)
+        let thisPinPhotos = thisPin.photos
+        print("thisPinPhotos",thisPinPhotos)
         
         
-       
-       if self.returnedPhotosArray.count > 0 {
+        
+        //print("thisPin photo url",thisPin.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))
+        if let thisPhotoString = thisPin.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m") {
+        
+        print("thisPhoto", thisPhotoString)
+        let imageURL = NSURL(string: thisPhotoString as! String)
+        
+        if let imageData = NSData(contentsOfURL: imageURL!) {
+            dispatch_async(dispatch_get_main_queue()) {
+                photoCell.photoImageView.image = UIImage(data: imageData)
+            }
+            }
+            
+        }
+*/
+        
+        
+
+        if self.returnedPhotosArray.count > 0 {
             print("in cellForItemAtIndexPath self.returnedPhotosArray.count", self.returnedPhotosArray.count)
             
             let thisReturnedPhoto = self.returnedPhotosArray[indexPath.item]
             
-            //print("thisFlickrPhoto", thisReturnedPhoto)
             
-            
-            let imageURL = NSURL(string: thisReturnedPhoto as! String)
+            let imageURL = NSURL(string: 
+             thisReturnedPhoto as! String)
             print("imageURL", imageURL)
         
             if let imageData = NSData(contentsOfURL: imageURL!) {
@@ -436,7 +501,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             }
  
         }
-        
+ 
+       
      
         
         return photoCell
