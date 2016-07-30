@@ -42,6 +42,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         self.mapView.delegate = self
         
         print("ViewController viewDidLoad")
@@ -134,6 +136,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
     @IBAction func longPressed(sender: UILongPressGestureRecognizer) {
         print("longPressed")
         
+        if (sender.state == .Began) {
         let tappedLocation = sender.locationInView(mapView)
         print(tappedLocation)
         let tappedCoordinate = mapView.convertPoint(tappedLocation, toCoordinateFromView: mapView)
@@ -150,7 +153,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         
         dispatch_async(dispatch_get_main_queue()) {
             self.mapView.addAnnotation(annotation)
-            
+            }
         }
         
     }
@@ -159,6 +162,17 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
         
         let pin = Pin(location: location, latitude: latitude, longitude: longitude, context: fetchedResultsController!.managedObjectContext)
         print("addPin", pin)
+        
+        do {
+            // try stack.save()
+            
+            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let stack = delegate.stack
+            
+            try stack.saveContext()
+        }catch{
+            print("error while saving")
+        }
     }
     
     

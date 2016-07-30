@@ -9,11 +9,7 @@
 import Foundation
 
 //VirtualTourist
-//Key:
-//d590bf9e37f0415994f25fa25cc23dc7
 
-//Secret:
-//1fd1f35797a94d19
 
 
 class FlickrPhotos {

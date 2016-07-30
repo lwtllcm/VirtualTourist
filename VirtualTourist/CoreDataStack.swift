@@ -223,14 +223,15 @@ extension CoreDataStack {
         
         
     }
-   /*
+   
     func saveContext() throws{
         if context.hasChanges {
             try context.save()
             print("saved count",context.insertedObjects.count)
         }
+        
     }
- */
+ 
     
     func autoSave(delayInSeconds : Int){
         

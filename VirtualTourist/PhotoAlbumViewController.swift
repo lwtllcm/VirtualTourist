@@ -265,6 +265,18 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         print("thisPin.photos", thisPin.photos)
 
         
+        do {
+            // try stack.save()
+            
+            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let stack = delegate.stack
+            
+            try stack.saveContext()
+        }catch{
+            print("error while saving")
+        }
+
+        
         
         
         /*
@@ -288,6 +300,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
          
          */
         
+        /*
+        
         do {
             try thisPin.managedObjectContext?.save()
             print(thisPin)
@@ -296,6 +310,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let saveError = error as NSError
             print(saveError)
         }
+ */
        
        
        /*
@@ -337,7 +352,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         }
     
     
-    
+/*
     func getPhotos(completionHandlerForGET:(result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         print("getPhotos")
         
@@ -410,7 +425,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         task.resume()
         return task
     }
-    
+*/    
     
     private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
         print("convertDataWithCompletionHandler")
@@ -492,17 +507,34 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let imageURL = NSURL(string: 
              thisReturnedPhoto as! String)
             print("imageURL", imageURL)
-        
+            
+       
             if let imageData = NSData(contentsOfURL: imageURL!) {
                 dispatch_async(dispatch_get_main_queue()) {
                     photoCell.photoImageView.image = UIImage(data: imageData)
                 }
 
             }
+           
+            
+            /*
+            
+            let request  = NSURLRequest(URL: imageURL!)
+            let session = NSURLSession.sharedSession()
+            let task = session.dataTaskWithRequest(request) { data, response, downloadError in
+                if let error = downloadError {
+                    print(error)
+                }
+                else {
+                    let imageData = UIImage(data: data!)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        photoCell.photoImageView.image = UIImage(data: imageData)
+                }
+            */
  
         }
  
-   
+ 
      
         
         return photoCell
@@ -511,6 +543,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     @IBAction func newCollectionPressed(sender: AnyObject) {
         print("newCollectionPressed")
     }
+    
+  /*
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath){
+        let photo = fetchedResultsController!.objectAtIndexPath(indexPath) as! Photo
+        CoreDataStackManager.sharedInstance().deleteObject(photo)
+    }
+ */
+    
 }
 
 
