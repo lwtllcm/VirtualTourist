@@ -83,13 +83,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         //var annotations = [MKPointAnnotation]()
        
         let lat1 = CLLocationDegrees(pin.latitude!)
-        print(lat1)
+        //print(lat1)
         let long1 = CLLocationDegrees(pin.longitude!)
-        print(long1)
+        //print(long1)
         let coordinate1 = CLLocationCoordinate2D(latitude: lat1!, longitude: long1!)
-        print(coordinate1)
+        //print(coordinate1)
         print(pin.photos!.count)
-         print(pin.photos!.count)
+        
         let annotation = MKPointAnnotation()
         
         annotation.coordinate = coordinate1
@@ -137,22 +137,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         print("longPressed")
         
         if (sender.state == .Began) {
-        let tappedLocation = sender.locationInView(mapView)
-        print(tappedLocation)
-        let tappedCoordinate = mapView.convertPoint(tappedLocation, toCoordinateFromView: mapView)
+            
+            let tappedLocation = sender.locationInView(mapView)
+            print(tappedLocation)
+            let tappedCoordinate = mapView.convertPoint(tappedLocation, toCoordinateFromView: mapView)
 
-        let tappedLatitude = String(tappedCoordinate.latitude)
-        let tappedLongitude = String(tappedCoordinate.longitude)
+            let tappedLatitude = String(tappedCoordinate.latitude)
+            let tappedLongitude = String(tappedCoordinate.longitude)
 
-        let annotation = MKPointAnnotation()
+            let annotation = MKPointAnnotation()
 
-        annotation.coordinate = tappedCoordinate
+            annotation.coordinate = tappedCoordinate
         
         
-        self.addPin("location", latitude: tappedLatitude , longitude: tappedLongitude )
+            self.addPin("location", latitude: tappedLatitude , longitude: tappedLongitude )
         
-        dispatch_async(dispatch_get_main_queue()) {
-            self.mapView.addAnnotation(annotation)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.mapView.addAnnotation(annotation)
             }
         }
         
@@ -164,12 +165,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         print("addPin", pin)
         
         do {
-            // try stack.save()
-            
-            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+             let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
             let stack = delegate.stack
             
-            try stack.saveContext()
+            try stack.save()
         }catch{
             print("error while saving")
         }

@@ -29,12 +29,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var sharedSession = NSURLSession.sharedSession()
     
     func preloadData() {
+        /*
         do {
             try stack.dropAllData()
         }catch{
             print("Error dropping all objects in DB")
         }
-        
+        */
               
         //let pinLosAngeles = Pin(entity: "Los Angeles", insertIntoManagedObjectContext: stack.context)
         
