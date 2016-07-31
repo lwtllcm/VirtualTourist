@@ -62,7 +62,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
         else {
             for pin in (fetchedResultsController?.fetchedObjects)! {
-            print(pin)
+            //print(pin)
                 self.setAnnotations(pin as! Pin)
                 self.mapView.reloadInputViews()
 
@@ -79,7 +79,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     
     func setAnnotations (pin:Pin) {
-        print("setAnnotations")
+        //print("setAnnotations")
         //var annotations = [MKPointAnnotation]()
        
         let lat1 = CLLocationDegrees(pin.latitude!)
@@ -88,7 +88,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         //print(long1)
         let coordinate1 = CLLocationCoordinate2D(latitude: lat1!, longitude: long1!)
         //print(coordinate1)
-        print(pin.photos!.count)
+        //print(pin.photos!.count)
         
         let annotation = MKPointAnnotation()
         
@@ -162,7 +162,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     func addPin(location:String, latitude:String, longitude:String) {
         
         let pin = Pin(location: location, latitude: latitude, longitude: longitude, context: fetchedResultsController!.managedObjectContext)
-        print("addPin", pin)
+        //print("addPin", pin)
         
         do {
              let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -199,7 +199,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 
         fr.predicate = compoundPredicate
 
-        print(fr)
+        //print(fr)
         
         
        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)

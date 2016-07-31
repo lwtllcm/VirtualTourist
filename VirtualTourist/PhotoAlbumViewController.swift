@@ -80,11 +80,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
         
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
-        print("fetchedObjects", fetchedObjects)
+        //print("fetchedObjects", fetchedObjects)
         
         
         for pin in fetchedObjects! {
-            print(pin)
+            //print(pin)
             self.getLatLon(pin as! Pin)
         }
         
@@ -107,9 +107,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
       
       
              let  thisPin = fetchedObjects![0] as! Pin
-        print("thisPin", thisPin)
-        print("thisPin.photos", thisPin.photos?.count)
+        //print("thisPin", thisPin)
+        //print("thisPin.photos", thisPin.photos?.count)
         if (thisPin.photos?.count > 0) {
+            
+            print("found photos for this pin,  thisPin.photos?.count", thisPin.photos?.count)
             print(thisPin.photos)
         }
         else {
@@ -126,7 +128,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 
                 
                 for photoURL in theseReturnedPhotoURLs {
-                    print("photoURL", photoURL)
+                    //print("photoURL", photoURL)
                     self.returnedPhotosArray.addObject(photoURL)
                     print("self.returnedPhotosArray", self.returnedPhotosArray)
                     
@@ -149,18 +151,30 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         print("getLatLon")
         selectedLatitude = pin.latitude!
         selectedLongitude = pin.longitude!
-        print(selectedLatitude)
-        print(selectedLongitude)
+        //print(selectedLatitude)
+        //print(selectedLongitude)
     }
     
     
     func addPhotos(thisPin:Pin, photoURLString:String) {
         print("addPhotos")
         
-        print(thisPin)
+        //print(thisPin)
         print("thisPin.photos", thisPin.photos)
-        print(photoURLString)
+        //print(photoURLString)
         
+        
+        let photo = Photo(imageData: photoURLString, context: testFetchedResultsController!.managedObjectContext)
+        photo.pin = thisPin
+        
+        do {
+            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let stack = delegate.stack
+            
+            try stack.save()
+        }catch{
+            print("error while saving")
+        }
         
         
      //   let newPhoto = NSEntityDescription.insertNewObjectForEntityForName("Photo", inManagedObjectContext: testFetchedResultsController!.managedObjectContext) as! Photo
@@ -168,7 +182,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
        
         
         
-        
+      /*
         if let pinForAdd = Pin(location: "location", latitude: thisPin.latitude!, longitude: thisPin.longitude!, context: testFetchedResultsController!.managedObjectContext) as Pin? {
                 print("addPin", pinForAdd)
         
@@ -184,7 +198,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         }catch{
             print("error while saving")
         }
-
+*/
             
             
             // newPhoto.imageData = photoURLString
@@ -192,8 +206,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         
         
-        print(thisPin)
-        print("pinForAdd.photos", pinForAdd.photos)
+        //print(thisPin)
+        //print("pinForAdd.photos", pinForAdd.photos)
 
        /*
         do {
@@ -207,7 +221,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 */
             
             
-        }
+       // }
     }
     
     
@@ -249,8 +263,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let PinForNumberOfItems = Pin(location: "location", latitude: thisPin.latitude!, longitude: thisPin.longitude!, context: testFetchedResultsController!.managedObjectContext) as Pin
         
-        print("collectionView numberOfItemsInSection PinForNumberOfItems", PinForNumberOfItems)
-        // print("collectionView numberOfItemsInSection thisPin.photos.count", thisPin.photos?.count)
+        //print("collectionView numberOfItemsInSection PinForNumberOfItems", PinForNumberOfItems)
+         print("collectionView numberOfItemsInSection thisPin.photos.count", thisPin.photos?.count)
         
 
        
@@ -273,7 +287,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             
             let imageURL = NSURL(string: 
              thisReturnedPhoto as! String)
-            print("imageURL", imageURL)
+            //print("imageURL", imageURL)
             
        
             if let imageData = NSData(contentsOfURL: imageURL!) {
@@ -309,16 +323,16 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 print("error returned from getPhotos")
             }
             else {
-                print("data after getPhotos - in completion handler", results)
+                //print("data after getPhotos - in completion handler", results)
                 
                 var theseReturnedPhotoURLs = []
                 theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
                 
                 
                 for photoURL in theseReturnedPhotoURLs {
-                    print("photoURL", photoURL)
+                    //print("photoURL", photoURL)
                     self.returnedPhotosArray.addObject(photoURL)
-                    print("self.returnedPhotosArray", self.returnedPhotosArray)
+                    // print("self.returnedPhotosArray", self.returnedPhotosArray)
                     
                     //add new photos to core data
                     //self.addPhotos("location", latitude: self.selectedLatitude, longitude: self.selectedLongitude, photoURLString: (photoURL as!  String))
