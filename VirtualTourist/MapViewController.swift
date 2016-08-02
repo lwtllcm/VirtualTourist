@@ -83,12 +83,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         //var annotations = [MKPointAnnotation]()
        
         let lat1 = CLLocationDegrees(pin.latitude!)
-        //print(lat1)
+
         let long1 = CLLocationDegrees(pin.longitude!)
-        //print(long1)
+
         let coordinate1 = CLLocationCoordinate2D(latitude: lat1!, longitude: long1!)
-        //print(coordinate1)
-        //print(pin.photos!.count)
         
         let annotation = MKPointAnnotation()
         
@@ -100,8 +98,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
     }
     
-    
-
    
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         print("annotationView selected")
