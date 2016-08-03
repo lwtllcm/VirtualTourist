@@ -105,8 +105,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         if (thisPin.photos?.count > 0) {
             
             print("found photos for this pin,  thisPin.photos?.count", thisPin.photos?.count)
-            //print(thisPin.photos)
-
             
            // http://stackoverflow.com/questions/33576113/proper-syntax-to-loop-through-core-data-nsset
             for photoURL:Photo in thisPin.photos as! Set<Photo>  {
@@ -149,7 +147,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     func getLatLon(pin:Pin) {
         print("getLatLon")
         selectedLatitude = pin.latitude!
-        selectedLongitude = pin.longitude!    }
+        selectedLongitude = pin.longitude!
+    }
     
     
     func addPhotos(thisPin:Pin, photoURLString:String) {
@@ -201,7 +200,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         //return (self.returnedPhotosArray.count)
         
-        
+
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
         
@@ -225,8 +224,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let  thisPin = fetchedObjects![0] as! Pin
         let photoSet = (thisPin.photos as! Set<Photo>)
         print("photoSet", photoSet)
-        //let thisPinPhoto = photoSet[indexPath.item]
-        //print("thisPinPhoto", thisPinPhoto)
+
         let photoArray = Array(photoSet)
         print("photoArray", photoArray)
         
@@ -244,44 +242,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 
 
         
-        
-        // http://stackoverflow.com/questions/33576113/proper-syntax-to-loop-through-core-data-nsset
-       /* for photoURL:Photo in thisPin.photos as! Set<Photo>  {
-            print(photoURL.imageData)
-            self.returnedPhotosArray.addObject(photoURL)
- 
-        }
-     */
-        
-     /*
-        
-        let fetchedObjects = testFetchedResultsController?.fetchedObjects![0].photos
-        print(fetchedObjects)
-
-        if self.returnedPhotosArray.count > 0 {
-            print("in cellForItemAtIndexPath self.returnedPhotosArray.count", self.returnedPhotosArray.count)
-            
-            let thisReturnedPhoto = self.returnedPhotosArray[indexPath.item]
-            
-            
-            let imageURL = NSURL(string: thisReturnedPhoto as! String)
-            //print("imageURL", imageURL)
-            
-       
-            if let imageData = NSData(contentsOfURL: imageURL!) {
-                dispatch_async(dispatch_get_main_queue()) {
-                    photoCell.photoImageView.image = UIImage(data: imageData)
-                }
-
-            }
-           
-            
- 
-        }
- */
- 
-     
-        
         return photoCell
     }
     
@@ -292,12 +252,23 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     @IBAction func newCollectionPressed(sender: AnyObject) {
         print("newCollectionPressed")
         
-        
-        
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
-        
         let  thisPin = fetchedObjects![0] as! Pin
+        let photoSet = (thisPin.photos as! Set<Photo>)
+
+        let photoArray = Array(photoSet)
+
+        for photo in photoArray {
+            if let context = fetchedResultsController?.managedObjectContext {
+             
+            context.deleteObject(photo)
+            }
+        }
+        
+        print(thisPin.photos?.count)
+        
+       // let  thisPin = fetchedObjects![0] as! Pin
 
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
             

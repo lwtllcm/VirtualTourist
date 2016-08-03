@@ -79,8 +79,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     
     func setAnnotations (pin:Pin) {
-        //print("setAnnotations")
-        //var annotations = [MKPointAnnotation]()
        
         let lat1 = CLLocationDegrees(pin.latitude!)
 
@@ -171,8 +169,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     
-    
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         print("prepareForSegue")
         
@@ -199,9 +195,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         
        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
-        
-        
-        //print("testFetchedResultsController.fetchedObjects in prepareForSegue", fetchedResultsController!.fetchedObjects)
        
         photoAlbumViewController.testFetchedResultsController = fetchedResultsController
                 
