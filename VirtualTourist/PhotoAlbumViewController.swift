@@ -99,13 +99,20 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
       
         let  thisPin = fetchedObjects![0] as! Pin
+
+        
         
         if (thisPin.photos?.count > 0) {
             
             print("found photos for this pin,  thisPin.photos?.count", thisPin.photos?.count)
             //print(thisPin.photos)
+
             
-            
+           // http://stackoverflow.com/questions/33576113/proper-syntax-to-loop-through-core-data-nsset
+            for photoURL:Photo in thisPin.photos as! Set<Photo>  {
+                print(photoURL.imageData)
+                self.returnedPhotosArray.addObject(photoURL)
+            }
         }
         else {
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
@@ -190,10 +197,21 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 
   
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("numberOfItemsInSection")
+        
+        //return (self.returnedPhotosArray.count)
         
         
-        return (self.returnedPhotosArray.count)
+        let fetchedObjects = testFetchedResultsController?.fetchedObjects
+        
+        
+        let  thisPin = fetchedObjects![0] as! Pin
+        print("thisPin.photos!.count", thisPin.photos!.count)
+        return thisPin.photos!.count
+        
+        
     }
+   
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         print("cellForItemAtIndexPath")
@@ -201,7 +219,41 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
   
         let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
         
+        let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
+        
+        let  thisPin = fetchedObjects![0] as! Pin
+        let photoSet = (thisPin.photos as! Set<Photo>)
+        print("photoSet", photoSet)
+        //let thisPinPhoto = photoSet[indexPath.item]
+        //print("thisPinPhoto", thisPinPhoto)
+        let photoArray = Array(photoSet)
+        print("photoArray", photoArray)
+        
+        let thisPhoto = photoArray[indexPath.item]
+        print("thisPhoto", thisPhoto)
+        
+        let imageURL = NSURL(string: thisPhoto.imageData!)
+        
+        if let imageData = NSData(contentsOfURL: imageURL!) {
+            dispatch_async(dispatch_get_main_queue()) {
+                photoCell.photoImageView.image = UIImage(data: imageData)
+            }
+            
+        }
+
+
+        
+        
+        // http://stackoverflow.com/questions/33576113/proper-syntax-to-loop-through-core-data-nsset
+       /* for photoURL:Photo in thisPin.photos as! Set<Photo>  {
+            print(photoURL.imageData)
+            self.returnedPhotosArray.addObject(photoURL)
+ 
+        }
+     */
+        
+     /*
         
         let fetchedObjects = testFetchedResultsController?.fetchedObjects![0].photos
         print(fetchedObjects)
@@ -212,8 +264,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let thisReturnedPhoto = self.returnedPhotosArray[indexPath.item]
             
             
-            let imageURL = NSURL(string: 
-             thisReturnedPhoto as! String)
+            let imageURL = NSURL(string: thisReturnedPhoto as! String)
             //print("imageURL", imageURL)
             
        
@@ -227,12 +278,16 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             
  
         }
- 
+ */
  
      
         
         return photoCell
     }
+    
+    
+    
+    
     
     @IBAction func newCollectionPressed(sender: AnyObject) {
         print("newCollectionPressed")
