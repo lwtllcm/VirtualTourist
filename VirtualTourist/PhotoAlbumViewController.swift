@@ -125,19 +125,22 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
                 
                 
-                for photoURL in theseReturnedPhotoURLs {
-
-                    self.returnedPhotosArray.addObject(photoURL)
-                    print("self.returnedPhotosArray", self.returnedPhotosArray)
+                for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
+                    self.returnedPhotosArray.addObject(photoURLStringFromGetPhotos)
                     
-                    //add new photos to core data
-
-                    self.addPhotos(thisPin,photoURLString: (photoURL as!  String))
+                    print(photoURLStringFromGetPhotos)
                     
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.collectionView.reloadData()
-                        }
-                    }
+                    
+                    let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
+                    print(photoURLFromGetPhotos)
+
+                    let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
+                    print(photoImageFromGetPhotos)
+                    
+                    self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos!)
+                    
+
+                }
                 }
             }
         }
@@ -151,15 +154,17 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
     
-    func addPhotos(thisPin:Pin, photoURLString:String) {
+    //func addPhotos(thisPin:Pin, photoURLString:String) {
+    
+    func addPhotos(thisPin:Pin, thisPhoto:NSData) {
         print("addPhotos")
         
         //print(thisPin)
         print("thisPin.photos", thisPin.photos)
         //print(photoURLString)
         
-        
-        let photo = Photo(imageData: photoURLString, context: testFetchedResultsController!.managedObjectContext)
+        let photo = Photo(imageData: thisPhoto, context: testFetchedResultsController!.managedObjectContext)
+
         photo.pin = thisPin
         
         do {
@@ -231,16 +236,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let thisPhoto = photoArray[indexPath.item]
         print("thisPhoto", thisPhoto)
         
-        let imageURL = NSURL(string: thisPhoto.imageData!)
         
-        if let imageData = NSData(contentsOfURL: imageURL!) {
             dispatch_async(dispatch_get_main_queue()) {
-                photoCell.photoImageView.image = UIImage(data: imageData)
+                photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
             }
             
-        }
-
-
+       
         
         return photoCell
     }
@@ -280,8 +281,27 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 
                 var theseReturnedPhotoURLs = []
                 theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+               
                 
                 
+                for photoURL in theseReturnedPhotoURLs {
+                    
+                    //self.returnedPhotosArray.addObject(photoURL)
+                    self.returnedPhotosArray.addObject(NSData(contentsOfURL: photoURL as! NSURL)!)
+                    print("self.returnedPhotosArray", self.returnedPhotosArray)
+                    
+                    //add new photos to core data
+                    
+                    //self.addPhotos(thisPin,photoURLString: (photoURL as!  String))
+                    
+                    self.addPhotos(thisPin,thisPhoto: NSData(contentsOfURL: photoURL as! NSURL)!)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.collectionView.reloadData()
+                    }
+                }
+
+                /*
                 for photoURL in theseReturnedPhotoURLs {
 
                     self.returnedPhotosArray.addObject(photoURL)
@@ -295,6 +315,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                     }
                     
                 }
+                */
             }
         }
     }
