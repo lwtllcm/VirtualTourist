@@ -156,7 +156,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     func addPin(location:String, latitude:String, longitude:String) {
         
         let pin = Pin(location: location, latitude: latitude, longitude: longitude, context: fetchedResultsController!.managedObjectContext)
-        //print("addPin", pin)
         
         do {
              let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -197,15 +196,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
        
         photoAlbumViewController.testFetchedResultsController = fetchedResultsController
-                
         
+                }
         
             }
         
         }
-        
-    }
-    
     
    }
 
