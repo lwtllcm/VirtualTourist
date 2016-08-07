@@ -74,8 +74,8 @@
                                     <outlet property="delegate" destination="jU6-kR-6Du" id="uQ3-BF-ozC"/>
                                 </connections>
                             </mapView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LiZ-YY-eO5">
-                                <rect key="frame" x="10" y="255" width="545" height="240"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LiZ-YY-eO5">
+                                <rect key="frame" x="10" y="255" width="581" height="240"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="kvo-4x-RkS">
                                     <size key="itemSize" width="170" height="134"/>
@@ -91,13 +91,19 @@
                                             <rect key="frame" x="0.0" y="0.0" width="170" height="134"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bTp-qj-9dB">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bTp-qj-9dB">
                                                     <rect key="frame" x="0.0" y="0.0" width="170" height="134"/>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="bTp-qj-9dB" firstAttribute="top" secondItem="PAM-Mg-mFL" secondAttribute="topMargin" constant="-8" id="TeS-ie-3th"/>
+                                            <constraint firstItem="bTp-qj-9dB" firstAttribute="leading" secondItem="PAM-Mg-mFL" secondAttribute="leadingMargin" constant="-8" id="WKT-eR-ApO"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="bTp-qj-9dB" secondAttribute="trailing" constant="-8" id="Y2H-df-Ktt"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="bTp-qj-9dB" secondAttribute="bottom" constant="-8" id="shJ-pq-ijo"/>
+                                        </constraints>
                                         <connections>
                                             <outlet property="photoImageView" destination="bTp-qj-9dB" id="5fw-Cs-qAh"/>
                                         </connections>
@@ -118,9 +124,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="4BM-Ta-2t2" firstAttribute="top" secondItem="dlV-rw-791" secondAttribute="bottom" constant="39" id="J3a-bg-VuG"/>
-                            <constraint firstItem="dlV-rw-791" firstAttribute="trailing" secondItem="Mr0-jg-l7f" secondAttribute="trailingMargin" id="KaZ-CG-fSR"/>
-                            <constraint firstItem="dlV-rw-791" firstAttribute="leading" secondItem="Mr0-jg-l7f" secondAttribute="leadingMargin" constant="-10" id="QWP-Lv-NFB"/>
+                            <constraint firstItem="dlV-rw-791" firstAttribute="trailing" secondItem="Mr0-jg-l7f" secondAttribute="trailingMargin" id="3ea-do-14x"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="LiZ-YY-eO5" secondAttribute="trailing" constant="-11" id="EZ8-Ft-1e4"/>
+                            <constraint firstItem="4BM-Ta-2t2" firstAttribute="top" secondItem="dlV-rw-791" secondAttribute="bottom" constant="39" id="SNc-zW-UUQ"/>
+                            <constraint firstItem="LiZ-YY-eO5" firstAttribute="leading" secondItem="Mr0-jg-l7f" secondAttribute="leadingMargin" constant="-10" id="gt3-pm-kEM"/>
+                            <constraint firstItem="dlV-rw-791" firstAttribute="top" secondItem="LiZ-YY-eO5" secondAttribute="bottom" constant="25" id="mJ3-2d-35t"/>
+                            <constraint firstItem="dlV-rw-791" firstAttribute="leading" secondItem="Mr0-jg-l7f" secondAttribute="leadingMargin" constant="-10" id="rHO-hB-oeX"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Photo Album" id="sdo-54-kjI"/>

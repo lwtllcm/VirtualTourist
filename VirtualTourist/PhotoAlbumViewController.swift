@@ -22,7 +22,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     @IBOutlet weak var NewCollectionButton: UIButton!
     
     var returnedPhotoURLs = []
-    var returnedPhotosArray:NSMutableArray = []
+   var returnedPhotosArray:NSMutableArray = []
     
     var testFetchedResultsController:NSFetchedResultsController?
    
@@ -64,6 +64,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         flowLayout.minimumLineSpacing = space
         flowLayout.minimumLineSpacing = space        
         flowLayout.itemSize = CGSizeMake(100.0, 100.0)
+        print("returnedPhotosArray.count",returnedPhotosArray.count)
+        returnedPhotosArray.removeAllObjects()
+        print("returnedPhotosArray.count",returnedPhotosArray.count)
         
      }
     
@@ -113,6 +116,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             }
         }
         else {
+            self.downloadPhotos(thisPin)
+            
+            /*
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
             
             if (error != nil) {
@@ -126,7 +132,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 
                 
                 for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
-                    self.returnedPhotosArray.addObject(photoURLStringFromGetPhotos)
+                    //self.returnedPhotosArray.addObject(photoURLStringFromGetPhotos)
                     
                     print(photoURLStringFromGetPhotos)
                     
@@ -143,8 +149,43 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 }
                 }
             }
+            */
         }
  
+    }
+    
+    func downloadPhotos (thisPin:Pin) {
+
+        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
+            
+            if (error != nil) {
+                print("error returned from getPhotos")
+            }
+            else {
+                print("data after getPhotos - in completion handler", results)
+                
+                var theseReturnedPhotoURLs = []
+                theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                
+                
+                for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
+                    //self.returnedPhotosArray.addObject(photoURLStringFromGetPhotos)
+                    
+                    print(photoURLStringFromGetPhotos)
+                    
+                    
+                    let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
+                    print(photoURLFromGetPhotos)
+                    
+                    let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
+                    print(photoImageFromGetPhotos)
+                    
+                    self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos!)
+                    
+                    
+                }
+            }
+        }
     }
     
     func getLatLon(pin:Pin) {
@@ -223,8 +264,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
   
         let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
         
-        let fetchedObjects = testFetchedResultsController?.fetchedObjects
+        photoCell.backgroundColor = UIColor.blueColor()
         
+        
+        //dispatch_async(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),
+        
+        let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
         let photoSet = (thisPin.photos as! Set<Photo>)
@@ -269,8 +314,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         print(thisPin.photos?.count)
         
+        self.downloadPhotos(thisPin)
+        
        // let  thisPin = fetchedObjects![0] as! Pin
-
+/*
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
             
             if (error != nil) {
@@ -318,12 +365,70 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 */
             }
         }
+ */
     }
     
-/*
+
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath){
-        let photo = fetchedResultsController!.objectAtIndexPath(indexPath) as! Photo
+        print("didSelectItemAtIndexPath")
+        
+        
+        let fetchedObjects = testFetchedResultsController?.fetchedObjects
+        
+        let  thisPin = fetchedObjects![0] as! Pin
+        var photoSet = (thisPin.photos as! Set<Photo>)
+        print("photoSet", photoSet)
+        
+        var photoArray = Array(photoSet)
+        print("photoArray", photoArray)
+        
+        let thisPhoto = photoArray[indexPath.item]
+        print("thisPhoto", thisPhoto)
+        
+        
+        print(photoArray.count)
+        photoArray.removeAtIndex(indexPath.item)
+        print(photoArray.count)
+        
+        thisPin.photos = NSSet(array: photoArray)
+        
+        
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.collectionView.reloadData()
+        }
+        
+        
+        
+        //if let photo = fetchedResultsController!.objectAtIndexPath(indexPath) as? Photo {
+         //   print(photo)
+        //}
+        
+        //print(photo)
+        
+        
+        
         let context = testFetchedResultsController?.managedObjectContext
+       // context?.deleteObject(testFetchedResultsController!.objectAtIndexPath(indexPath) as! NSManagedObject)
+        
+        
+        
+        
+       // context?.deleteObject(photo) as! NSManagedObject
+       // returnedPhotosArray.removeObjectAtIndex(indexPath.item)
+       
+        
+        /*do{
+           try context?.save()
+        }catch{
+            print("error in saving context after delete")
+        }
+ */
+        
+    }
+        
+      /*
+        
         context?.deleteObject(photo)
         }
         CoreDataStackManager.sharedInstance().deleteObject(photo)
