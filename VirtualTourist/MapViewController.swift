@@ -28,14 +28,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func executeSearch() {
-        print("executeSearch")
+
         if let fc = fetchedResultsController {
             do {
                 try fc.performFetch()
 
             }
             catch {
-                print ("error in performFetch")
+                let uiAlertController = UIAlertController(title: "performFetch error", message: "error in performFetch", preferredStyle: .Alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                uiAlertController.addAction(defaultAction)
+                self.presentViewController(uiAlertController, animated: true, completion: nil)
+
             }
         }
     }
@@ -46,8 +50,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         self.mapView.delegate = self
         
-        print("ViewController viewDidLoad")
-        
         let fr = NSFetchRequest(entityName: "Pin")
         fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
         
@@ -57,12 +59,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
         if fetchedResultsController?.fetchedObjects?.count == 0 {
-            print("no fetched results")
+
+            let uiAlertController = UIAlertController(title: "no fetched results", message: "no fetched results", preferredStyle: .Alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            uiAlertController.addAction(defaultAction)
+            self.presentViewController(uiAlertController, animated: true, completion: nil)
+
 
         }
         else {
             for pin in (fetchedResultsController?.fetchedObjects)! {
-            //print(pin)
+
                 self.setAnnotations(pin as! Pin)
                 self.mapView.reloadInputViews()
 
@@ -98,7 +105,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
    
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        print("annotationView selected")
         
         var selectedCoordinateLatitude:CLLocationDegrees!
         selectedCoordinateLatitude  = view.annotation?.coordinate.latitude
@@ -128,12 +134,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     @IBAction func longPressed(sender: UILongPressGestureRecognizer) {
-        print("longPressed")
         
         if (sender.state == .Began) {
             
             let tappedLocation = sender.locationInView(mapView)
-            print(tappedLocation)
+
             let tappedCoordinate = mapView.convertPoint(tappedLocation, toCoordinateFromView: mapView)
 
             let tappedLatitude = String(tappedCoordinate.latitude)
@@ -163,13 +168,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             
             try stack.save()
         }catch{
-            print("error while saving")
+            let uiAlertController = UIAlertController(title: "error in addPin", message: "error in addPin", preferredStyle: .Alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            uiAlertController.addAction(defaultAction)
+            self.presentViewController(uiAlertController, animated: true, completion: nil)
+
         }
     }
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        print("prepareForSegue")
         
         if segue.identifier == "showPhotoAlbum" {
             if let photoAlbumViewController = segue.destinationViewController as? PhotoAlbumViewController {
@@ -189,9 +197,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let compoundPredicate = NSCompoundPredicate.init(andPredicateWithSubpredicates: ([pred1, pred2]))
                 
         fr.predicate = compoundPredicate
-
-        //print(fr)
-        
         
        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
        
