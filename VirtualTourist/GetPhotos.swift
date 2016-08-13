@@ -28,7 +28,6 @@ class GetPhotos  {
         
         let session = NSURLSession.sharedSession()
         
-        //let flickrSearchURL = NSURL(string: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&bbox=-123.8587455078125,46.35308398800007,bbox=-123.8587455078125,46.35308398800007,48.587958419830336&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1&per_page=5")!
         
         var bboxString = "lon="
         var bboxSelectedLongitude:NSString = selectedLongitude
@@ -38,10 +37,8 @@ class GetPhotos  {
         
         bboxString = bboxString + "&lat="
         
-        // -123.8587455078125&lat="
-        
         var bboxSelectedLatitude:NSString = selectedLatitude
-        // var bboxSelectedLatitude = ((selectedLatitude as NSString) as String)
+
         print(bboxSelectedLatitude)
         bboxString = bboxString + (bboxSelectedLatitude as String)
         
@@ -69,19 +66,19 @@ class GetPhotos  {
             }
             
             guard (error == nil) else {
-                //displayError("There was an error with your request: \(error)")
+
                 print("There was an error with your request: \(error)")
                 return
             }
             
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                //displayError("Your request returned a status code other than 2xx!")
+
                 print("Your request returned a status code other than 2xx!")
                 return
             }
             
             guard data != nil else {
-                //displayError("No data was returned by the request!")
+
                 print("No data was returned by the request!")
                 
                 return

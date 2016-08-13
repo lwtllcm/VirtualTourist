@@ -66,8 +66,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         flowLayout.itemSize = CGSizeMake(100.0, 100.0)
 
         returnedPhotosArray.removeAllObjects()
-
-        
+      
      }
     
     
@@ -98,33 +97,48 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 
         self.mapView.addAnnotation(annotation)
         
-        
+       
       
         let  thisPin = fetchedObjects![0] as! Pin
-
         
-     /*
-        if (thisPin.photos?.count > 0) {
+        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
             
-           // http://stackoverflow.com/questions/33576113/proper-syntax-to-loop-through-core-data-nsset
-            for photoURL:Photo in thisPin.photos as! Set<Photo>  {
-
-                self.returnedPhotosArray.addObject(photoURL)
+            if (error != nil) {
+                
+                let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                uiAlertController.addAction(defaultAction)
+                self.presentViewController(uiAlertController, animated: true, completion: nil)
+                
             }
-        }
-        else {
-            self.downloadPhotos(thisPin)
+            else {
+                var theseReturnedPhotoURLs = []
+                theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                
+                
+                for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
+                    
+                    let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
+                    
+                    let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
+                    
+                    self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos!)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.collectionView.reloadData()
+                    }
+                    
+                }
+                
+            }
             
-            dispatch_async(dispatch_get_main_queue()) {
-                self.collectionView.reloadData()
-            }
-
         }
-        */
- 
+        
     }
     
-    func downloadPhotos (thisPin:Pin) {
+    func downloadPhotos (thisPin:Pin, completionHandler:(result: AnyObject!, error:NSError?) -> Void) {
+        
+        print("downloadPhotos existing count", thisPin.photos?.count)
 
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
             
@@ -151,8 +165,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                     self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos!)
                     
                 }
+                
             }
+            
         }
+        
+        completionHandler(result: thisPin, error: nil)
     }
     
     func getLatLon(pin:Pin) {
@@ -161,7 +179,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
     
-    //func addPhotos(thisPin:Pin, photoURLString:String) {
     
     func addPhotos(thisPin:Pin, thisPhoto:NSData) {
         
@@ -181,31 +198,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             self.presentViewController(uiAlertController, animated: true, completion: nil)
 
         }
+        
      }
     
     
-    
-    private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
-
-        var parsedResult: AnyObject!
-        
-        do {
-            
-            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-            
-            
-        }
-        catch {
-            let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-            completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
-        }
-        
-        completionHandlerForConvertData(result: parsedResult, error: nil)
-        
-    }
-    
-
-  
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         //return (self.returnedPhotosArray.count)
@@ -221,6 +217,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
    
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        print("cellForItemAtIndexPath")
         
         let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
         
@@ -233,16 +230,46 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let  thisPin = fetchedObjects![0] as! Pin
             
-        let photoSet = (thisPin.photos as! Set<Photo>)
+            
+           if thisPin.photos?.count == 0 {
+            self.downloadPhotos(thisPin, completionHandler: {(results, error)   in
+                
+                if (error != nil) {
+                    print("error result from downloadPhotos")
+                }
+                    
+                else {
+                    print("**3")
+                    dispatch_async(dispatch_get_main_queue()) {
+                        
+                       
+                        self.collectionView.reloadData()
+                        
+                        print("**4")
+                    }
+                    
+                }
+                
+            })
+            
+        }
+           
+            
+            let photoSet = (thisPin.photos as! Set<Photo>)
+            
+            
+            
+            let photoArray = Array(photoSet)
+            
+            
+            
+            let thisPhoto = photoArray[indexPath.item]
 
-        let photoArray = Array(photoSet)
-        
-        let thisPhoto = photoArray[indexPath.item]
-        
             dispatch_async(dispatch_get_main_queue()) {
                 photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
+
             }
-            
+       
         })
         
         return photoCell
@@ -266,17 +293,47 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
              
             context.deleteObject(photo)
             }
+            
         }
         
-        self.downloadPhotos(thisPin)
         
-        dispatch_async(dispatch_get_main_queue()) {
-            self.collectionView.reloadData()
+        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
+            
+            if (error != nil) {
+                
+                let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                uiAlertController.addAction(defaultAction)
+                self.presentViewController(uiAlertController, animated: true, completion: nil)
+                
+            }
+            else {
+                var theseReturnedPhotoURLs = []
+                theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                
+                
+                for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
+                    //self.returnedPhotosArray.addObject(photoURLStringFromGetPhotos)
+                    
+                    let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
+                    
+                    let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
+                    
+                    self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos!)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.collectionView.reloadData()
+                    }
+                    
+                }
+                
+            }
+            
         }
         
     }
     
-
+    
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath){
         
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
@@ -288,15 +345,35 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         photoArray.removeAtIndex(indexPath.item)
         
+        
         thisPin.photos = NSSet(array: photoArray)
+        
+        let context = testFetchedResultsController!.managedObjectContext
+        print("thisPin.photos.count before delete", thisPin.photos!.count)
+        context.deleteObject(photoArray[indexPath.item])
+        do {
+            try context.save()
+            
+        }
+        catch {
+            let uiAlertController = UIAlertController(title: "delete photos error", message: "error in deletePhotos", preferredStyle: .Alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            uiAlertController.addAction(defaultAction)
+            self.presentViewController(uiAlertController, animated: true, completion: nil)
+
+        }
+        
+        print("thisPin.photos.count after delete", thisPin.photos!.count)
+
+        
         
         dispatch_async(dispatch_get_main_queue()) {
             self.collectionView.reloadData()
-        }
+            }
         
-    }
+        }
  
-}
+    }
 
 
 
