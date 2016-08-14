@@ -48,7 +48,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let fr = NSFetchRequest(entityName: "Pin")
         fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
         
@@ -80,6 +80,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        
     }
     
     func setAnnotations (pin:Pin) {
@@ -99,7 +100,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        
+
         var selectedCoordinateLatitude:CLLocationDegrees!
         selectedCoordinateLatitude  = view.annotation?.coordinate.latitude
         
@@ -112,9 +113,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
 
         var  photoAlbumViewController:PhotoAlbumViewController
         photoAlbumViewController = storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
-        
-        photoAlbumViewController.selectedLatitude = selectedCoordinateLatitudeString
-        photoAlbumViewController.selectedLongitude = selectedCoordinateLongitudeString
         
         performSegueWithIdentifier("showPhotoAlbum", sender: self)
         
@@ -154,7 +152,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let pin = Pin(location: location, latitude: latitude, longitude: longitude, context: fetchedResultsController!.managedObjectContext)
         
         do {
-             let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            
+            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
             let stack = delegate.stack
             
             try stack.save()

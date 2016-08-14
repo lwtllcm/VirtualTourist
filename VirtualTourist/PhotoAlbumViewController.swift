@@ -31,35 +31,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     var selectedLatitude = ""
     var selectedLongitude = ""
     
-    //fetchedResultsController
-    var fetchedResultsController:NSFetchedResultsController? {
-        didSet {
-
-            executeSearch()
-        }
-        
-    }
     
-    //executeSearch
-    func executeSearch() {
-
-        if let fc = fetchedResultsController {
-            do {
-                try fc.performFetch()
-            }
-            catch {
-                let uiAlertController = UIAlertController(title: "performFetch error", message: "error in performFetch", preferredStyle: .Alert)
-                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                uiAlertController.addAction(defaultAction)
-                presentViewController(uiAlertController, animated: true, completion: nil)
-            }
-            
-        }
-        
-    }
-   
+    
     //viewDidLoad
     override func viewDidLoad() {
+        print("viewDidLoad")
         super.viewDidLoad()
 
         //collectionView setup
@@ -76,7 +52,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     //viewWillAppear
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        print("photo album viewwillappear")
         //show focused map for selected pin
         let mapSpan = MKCoordinateSpanMake(2.0, 2.0)
     
@@ -104,6 +80,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
       
         let  thisPin = fetchedObjects![0] as! Pin
         
+        
+        print(thisPin.photos?.count)
+        if thisPin.photos?.count == 0 {
+            
+            
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
             
             if (error != nil) {
@@ -137,6 +118,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             
         }
         
+        }
+        else {
+            print("already have photo")
+            collectionView.reloadData()
+        }
     }
     
     func downloadPhotos (thisPin:Pin, completionHandler:(result: AnyObject!, error:NSError?) -> Void) {
@@ -215,7 +201,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
    
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        print("cellForItemAtIndexPath")
         
         let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
         
@@ -227,11 +212,16 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let  thisPin = fetchedObjects![0] as! Pin
             
-           if thisPin.photos?.count == 0 {
+        if thisPin.photos?.count == 0 {
                 self.downloadPhotos(thisPin, completionHandler: {(results, error)   in
                 
                 if (error != nil) {
-                    print("error result from downloadPhotos")
+
+                    let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                    uiAlertController.addAction(defaultAction)
+                    self.presentViewController(uiAlertController, animated: true, completion: nil)
+
                 }                    
                 else {
                     dispatch_async(dispatch_get_main_queue()) {
@@ -274,7 +264,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         thisPin.photos = NSSet(array: photoArray)
         
         for photo in photoArray {
-            if let context = fetchedResultsController?.managedObjectContext {
+            if let context = testFetchedResultsController?.managedObjectContext {
              
             context.deleteObject(photo)
             }
@@ -296,7 +286,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
                 
                 for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
-                    //self.returnedPhotosArray.addObject(photoURLStringFromGetPhotos)
                     
                     let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
                     
@@ -328,15 +317,18 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         thisPin.photos = NSSet(array: photoArray)
         
-        print("photos count before delete", thisPin.photos!.count)
-        print("indexPath.item", indexPath.item)
-        
         let context = testFetchedResultsController!.managedObjectContext
-        print("thisPin.photos.count before delete", thisPin.photos!.count)
+
         context.deleteObject(photoArray[indexPath.item])
         
         do {
             try context.save()
+            
+            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let stack = delegate.stack
+            
+            try stack.save()
+
             
         }
         catch {
@@ -344,13 +336,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
             uiAlertController.addAction(defaultAction)
             presentViewController(uiAlertController, animated: true, completion: nil)
-
+            
         }
         
-        print("photos count after delete", thisPin.photos!.count)
         
         dispatch_async(dispatch_get_main_queue()) {
             collectionView.reloadData()
+            
             }
         
         }
