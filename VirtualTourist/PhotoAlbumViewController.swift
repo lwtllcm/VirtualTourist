@@ -326,13 +326,15 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         var photoArray = Array(photoSet)
         
-        photoArray.removeAtIndex(indexPath.item)
-        
         thisPin.photos = NSSet(array: photoArray)
+        
+        print("photos count before delete", thisPin.photos!.count)
+        print("indexPath.item", indexPath.item)
         
         let context = testFetchedResultsController!.managedObjectContext
         print("thisPin.photos.count before delete", thisPin.photos!.count)
         context.deleteObject(photoArray[indexPath.item])
+        
         do {
             try context.save()
             
@@ -345,7 +347,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 
         }
         
-        print("thisPin.photos.count after delete", thisPin.photos!.count)
+        print("photos count after delete", thisPin.photos!.count)
         
         dispatch_async(dispatch_get_main_queue()) {
             collectionView.reloadData()
