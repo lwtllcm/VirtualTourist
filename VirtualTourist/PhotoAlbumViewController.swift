@@ -22,7 +22,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     @IBOutlet weak var NewCollectionButton: UIButton!
     
     var returnedPhotoURLs = []
-   var returnedPhotosArray:NSMutableArray = []
+    var returnedPhotosArray:NSMutableArray = []
     
     var testFetchedResultsController:NSFetchedResultsController?
    
@@ -37,6 +37,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 
             executeSearch()
         }
+        
     }
     
     //executeSearch
@@ -50,9 +51,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 let uiAlertController = UIAlertController(title: "performFetch error", message: "error in performFetch", preferredStyle: .Alert)
                 let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
                 uiAlertController.addAction(defaultAction)
-                self.presentViewController(uiAlertController, animated: true, completion: nil)
+                presentViewController(uiAlertController, animated: true, completion: nil)
             }
+            
         }
+        
     }
    
     //viewDidLoad
@@ -81,7 +84,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         for pin in fetchedObjects! {
 
-            self.getLatLon(pin as! Pin)
+            getLatLon(pin as! Pin)
         }
         
         let mapRegion =
@@ -95,7 +98,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         annotation.coordinate =
             CLLocationCoordinate2D(latitude:CLLocationDegrees(selectedLatitude)!, longitude:CLLocationDegrees(selectedLongitude)!)
 
-        self.mapView.addAnnotation(annotation)
+        mapView.addAnnotation(annotation)
         
        
       
@@ -154,9 +157,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 var theseReturnedPhotoURLs = []
                 theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
                 
-                
                 for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
-                    //self.returnedPhotosArray.addObject(photoURLStringFromGetPhotos)
                     
                     let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
                     
@@ -195,7 +196,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let uiAlertController = UIAlertController(title: "addPhotos error", message: "error in addPhotos", preferredStyle: .Alert)
             let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
             uiAlertController.addAction(defaultAction)
-            self.presentViewController(uiAlertController, animated: true, completion: nil)
+            presentViewController(uiAlertController, animated: true, completion: nil)
 
         }
         
@@ -203,9 +204,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        //return (self.returnedPhotosArray.count)
-        
 
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
@@ -223,29 +221,21 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         photoCell.backgroundColor = UIColor.blueColor()
         
-        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
         
         let fetchedObjects = self.testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
             
-            
            if thisPin.photos?.count == 0 {
-            self.downloadPhotos(thisPin, completionHandler: {(results, error)   in
+                self.downloadPhotos(thisPin, completionHandler: {(results, error)   in
                 
                 if (error != nil) {
                     print("error result from downloadPhotos")
-                }
-                    
+                }                    
                 else {
-                    print("**3")
                     dispatch_async(dispatch_get_main_queue()) {
-                        
-                       
-                        self.collectionView.reloadData()
-                        
-                        print("**4")
+                        collectionView.reloadData()
                     }
                     
                 }
@@ -253,15 +243,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             })
             
         }
-           
             
             let photoSet = (thisPin.photos as! Set<Photo>)
             
-            
-            
             let photoArray = Array(photoSet)
-            
-            
             
             let thisPhoto = photoArray[indexPath.item]
 
@@ -296,7 +281,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             
         }
         
-        
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
             
             if (error != nil) {
@@ -310,7 +294,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             else {
                 var theseReturnedPhotoURLs = []
                 theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
-                
                 
                 for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
                     //self.returnedPhotosArray.addObject(photoURLStringFromGetPhotos)
@@ -345,7 +328,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         photoArray.removeAtIndex(indexPath.item)
         
-        
         thisPin.photos = NSSet(array: photoArray)
         
         let context = testFetchedResultsController!.managedObjectContext
@@ -359,16 +341,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let uiAlertController = UIAlertController(title: "delete photos error", message: "error in deletePhotos", preferredStyle: .Alert)
             let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
             uiAlertController.addAction(defaultAction)
-            self.presentViewController(uiAlertController, animated: true, completion: nil)
+            presentViewController(uiAlertController, animated: true, completion: nil)
 
         }
         
         print("thisPin.photos.count after delete", thisPin.photos!.count)
-
-        
         
         dispatch_async(dispatch_get_main_queue()) {
-            self.collectionView.reloadData()
+            collectionView.reloadData()
             }
         
         }

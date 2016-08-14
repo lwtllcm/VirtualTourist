@@ -19,12 +19,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     var selectedCoordinateLatitudeString:String!
     var selectedCoordinateLongitudeString:String!
-
     
     var fetchedResultsController:NSFetchedResultsController? {
         didSet {
             executeSearch()
         }
+        
     }
     
     func executeSearch() {
@@ -38,17 +38,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 let uiAlertController = UIAlertController(title: "performFetch error", message: "error in performFetch", preferredStyle: .Alert)
                 let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
                 uiAlertController.addAction(defaultAction)
-                self.presentViewController(uiAlertController, animated: true, completion: nil)
+                presentViewController(uiAlertController, animated: true, completion: nil)
 
             }
+            
         }
+        
     }
    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        self.mapView.delegate = self
         
         let fr = NSFetchRequest(entityName: "Pin")
         fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
@@ -63,17 +62,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             let uiAlertController = UIAlertController(title: "no fetched results", message: "no fetched results", preferredStyle: .Alert)
             let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
             uiAlertController.addAction(defaultAction)
-            self.presentViewController(uiAlertController, animated: true, completion: nil)
-
+            presentViewController(uiAlertController, animated: true, completion: nil)
 
         }
         else {
             for pin in (fetchedResultsController?.fetchedObjects)! {
 
-                self.setAnnotations(pin as! Pin)
-                self.mapView.reloadInputViews()
+                setAnnotations(pin as! Pin)
+                mapView.reloadInputViews()
 
             }
+            
         }
         
   }
@@ -82,8 +81,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         super.viewWillAppear(animated)
         
     }
-    
-    
     
     func setAnnotations (pin:Pin) {
        
@@ -97,13 +94,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         annotation.coordinate = coordinate1
         
-        
-        self.mapView.addAnnotation(annotation)
-
+        mapView.addAnnotation(annotation)
         
     }
     
-   
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         
         var selectedCoordinateLatitude:CLLocationDegrees!
@@ -114,13 +108,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
 
         selectedCoordinateLatitudeString = "\(selectedCoordinateLatitude)"
 
-        
         selectedCoordinateLongitudeString = "\(selectedCoordinateLongitude)"
 
-        
         var  photoAlbumViewController:PhotoAlbumViewController
-        photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
-        
+        photoAlbumViewController = storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
         
         photoAlbumViewController.selectedLatitude = selectedCoordinateLatitudeString
         photoAlbumViewController.selectedLongitude = selectedCoordinateLongitudeString
@@ -148,12 +139,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
 
             annotation.coordinate = tappedCoordinate
         
-        
-            self.addPin("location", latitude: tappedLatitude , longitude: tappedLongitude )
+            addPin("location", latitude: tappedLatitude , longitude: tappedLongitude )
         
             dispatch_async(dispatch_get_main_queue()) {
                 self.mapView.addAnnotation(annotation)
             }
+            
         }
         
     }
@@ -171,11 +162,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             let uiAlertController = UIAlertController(title: "error in addPin", message: "error in addPin", preferredStyle: .Alert)
             let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
             uiAlertController.addAction(defaultAction)
-            self.presentViewController(uiAlertController, animated: true, completion: nil)
+            presentViewController(uiAlertController, animated: true, completion: nil)
 
         }
     }
-    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
@@ -198,7 +188,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 
         fr.predicate = compoundPredicate
         
-       fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
        
         photoAlbumViewController.testFetchedResultsController = fetchedResultsController
         
