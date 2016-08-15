@@ -22,7 +22,7 @@ class GetPhotos  {
         return Singleton.sharedInstance
     }
 
-    func getPhotos(selectedLatitude: String, selectedLongitude: String, completionHandlerForGET:(result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    func getPhotos(selectedLatitude: String, selectedLongitude: String, page: Int, completionHandlerForGET:(result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         print("getPhotos")
         
         
@@ -31,7 +31,6 @@ class GetPhotos  {
         
         var bboxString = "lon="
         var bboxSelectedLongitude:NSString = selectedLongitude
-        print(bboxSelectedLongitude)
         
         bboxString = bboxString + (bboxSelectedLongitude as String)
         
@@ -39,12 +38,17 @@ class GetPhotos  {
         
         var bboxSelectedLatitude:NSString = selectedLatitude
 
-        print(bboxSelectedLatitude)
         bboxString = bboxString + (bboxSelectedLatitude as String)
+        
+        var flickrPageString = "&page="
+        //var flickrPageNum = 1
+        var flickrPageNumString = String(page)
+        flickrPageString = flickrPageString + (flickrPageNumString)
         
         
         var flickrSearchURLString = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&"
         flickrSearchURLString = flickrSearchURLString + bboxString
+        flickrSearchURLString = flickrSearchURLString + flickrPageString
         flickrSearchURLString = flickrSearchURLString + "&radius=20&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1&per_page=5"
         print(" ")
         print("flickrSearchURLString", flickrSearchURLString)

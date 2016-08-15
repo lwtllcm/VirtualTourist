@@ -31,7 +31,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     var selectedLatitude = ""
     var selectedLongitude = ""
     
-    
+    var flickrPage = 1
+    var flickrTotPages = 1
     
     //viewDidLoad
     override func viewDidLoad() {
@@ -85,7 +86,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         if thisPin.photos?.count == 0 {
             
             
-        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
+            GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude, page:flickrPage) {(results, error)   in
             
             if (error != nil) {
                 
@@ -96,8 +97,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 
             }
             else {
+
                 var theseReturnedPhotoURLs = []
                 theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                
+                self.flickrTotPages = (results.valueForKey("photos")?.valueForKey("pages")) as! Int
+                print("flickrTotPages",self.flickrTotPages)
+                
                 
                 
                 for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
@@ -129,7 +135,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         print("downloadPhotos existing count", thisPin.photos?.count)
 
-        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
+        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude, page: flickrPage) {(results, error)   in
             
             if (error != nil) {
 
@@ -267,11 +273,16 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             if let context = testFetchedResultsController?.managedObjectContext {
              
             context.deleteObject(photo)
+                
             }
             
         }
         
-        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude) {(results, error)   in
+        
+        let randomPage = Int(arc4random_uniform(UInt32(flickrTotPages)))
+        print("randomPage", randomPage)
+        
+        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude, page: randomPage) {(results, error)   in
             
             if (error != nil) {
                 
