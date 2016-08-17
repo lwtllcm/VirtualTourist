@@ -82,7 +82,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let  thisPin = fetchedObjects![0] as! Pin
         
         
-        print(thisPin.photos?.count)
+        print("viewWillAppear",thisPin.photos?.count)
         if thisPin.photos?.count == 0 {
             
             
@@ -279,7 +279,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         }
         
         
-        let randomPage = Int(arc4random_uniform(UInt32(flickrTotPages)))
+        let randomPage = Int(arc4random_uniform(UInt32(min(40,flickrTotPages))))
         print("randomPage", randomPage)
         
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude, page: randomPage) {(results, error)   in
@@ -328,17 +328,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         thisPin.photos = NSSet(array: photoArray)
         
-        let context = testFetchedResultsController!.managedObjectContext
-
-        context.deleteObject(photoArray[indexPath.item])
         
         do {
-            try context.save()
             
             let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
             let stack = delegate.stack
-            
+            stack.context.deleteObject(photoArray[indexPath.item])
             try stack.save()
+            print("didSelectItemAtIndexPath count after deleteObject", thisPin.photos!.count)
 
             
         }

@@ -49,7 +49,7 @@ class GetPhotos  {
         var flickrSearchURLString = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d590bf9e37f0415994f25fa25cc23dc7&"
         flickrSearchURLString = flickrSearchURLString + bboxString
         flickrSearchURLString = flickrSearchURLString + flickrPageString
-        flickrSearchURLString = flickrSearchURLString + "&radius=20&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1&per_page=5"
+        flickrSearchURLString = flickrSearchURLString + "&radius=20&accuracy=1&safe_search=1&extras=url_m&format=json&nojsoncallback=1&per_page=20"
         print(" ")
         print("flickrSearchURLString", flickrSearchURLString)
         
