@@ -217,36 +217,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let fetchedObjects = self.testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
-            
-        if thisPin.photos?.count == 0 {
-                self.downloadPhotos(thisPin, completionHandler: {(results, error)   in
-                
-                if (error != nil) {
 
-                    let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
-                    let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                    uiAlertController.addAction(defaultAction)
-                    self.presentViewController(uiAlertController, animated: true, completion: nil)
+        let photoSet = (thisPin.photos as! Set<Photo>)
+            
+        let photoArray = Array(photoSet)
+            
+        let thisPhoto = photoArray[indexPath.item]
 
-                }                    
-                else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        collectionView.reloadData()
-                    }
-                    
-                }
-                
-            })
-            
-        }
-            
-            let photoSet = (thisPin.photos as! Set<Photo>)
-            
-            let photoArray = Array(photoSet)
-            
-            let thisPhoto = photoArray[indexPath.item]
-
-            dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue()) {
                 photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
 
             }
