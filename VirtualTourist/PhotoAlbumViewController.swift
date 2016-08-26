@@ -24,6 +24,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     var returnedPhotoURLs = []
     var returnedPhotosArray:NSMutableArray = []
     
+    var theseReturnedPhotoURLs = []
+    
     var testFetchedResultsController:NSFetchedResultsController?
    
     
@@ -33,6 +35,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     var flickrPage = 1
     var flickrTotPages = 1
+    
+    var newDownload = false
     
     //viewDidLoad
     override func viewDidLoad() {
@@ -55,6 +59,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         super.viewWillAppear(animated)
         print("photo album viewwillappear")
         //show focused map for selected pin
+        
         let mapSpan = MKCoordinateSpanMake(2.0, 2.0)
     
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
@@ -85,7 +90,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         print("viewWillAppear",thisPin.photos?.count)
         if thisPin.photos?.count == 0 {
             
-            
             GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude, page:flickrPage) {(results, error)   in
             
             if (error != nil) {
@@ -98,72 +102,44 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             }
             else {
 
-                var theseReturnedPhotoURLs = []
-                theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                self.newDownload = true
+
+                self.theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                print(self.theseReturnedPhotoURLs)
+                print(self.theseReturnedPhotoURLs.count)
                 
-                self.flickrTotPages = (results.valueForKey("photos")?.valueForKey("pages")) as! Int
-                print("flickrTotPages",self.flickrTotPages)
-                
-                
-                
-                for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
-                    
-                    let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
-                    
-                    let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
-                    
-                    self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos!)
-                    
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.collectionView.reloadData()
-                    }
-                    
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.collectionView.reloadData()
                 }
+                
                 
             }
             
         }
         
-        }
+    }
         else {
+            
+            
             print("already have photo")
+            
             collectionView.reloadData()
         }
     }
     
-    func downloadPhotos (thisPin:Pin, completionHandler:(result: AnyObject!, error:NSError?) -> Void) {
+    func downloadPhotos (thisURL:NSString, completionHandler:(result: AnyObject!, error:NSError?) -> Void) {
         
-        print("downloadPhotos existing count", thisPin.photos?.count)
-
-        GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude, page: flickrPage) {(results, error)   in
-            
-            if (error != nil) {
-
-                let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
-                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                uiAlertController.addAction(defaultAction)
-                self.presentViewController(uiAlertController, animated: true, completion: nil)
-
-            }
-            else {
-                var theseReturnedPhotoURLs = []
-                theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
-                
-                for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
-                    
-                    let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
-                    
-                    let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
-                    
-                    self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos!)
-                    
-                }
-                
-            }
-            
-        }
         
-        completionHandler(result: thisPin, error: nil)
+        
+        print("downloadPhotos existing count", thisURL)
+        
+        let photoURLFromGetPhotos = NSURL(string: thisURL as String)
+
+        let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
+        
+            
+        
+        completionHandler(result: photoImageFromGetPhotos, error: nil)
     }
     
     func getLatLon(pin:Pin) {
@@ -200,9 +176,16 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
-
-        return thisPin.photos!.count
         
+        if thisPin.photos!.count > 0 {
+            print("thisPin.photos!.count",thisPin.photos!.count)
+
+            return thisPin.photos!.count
+        }
+        else {
+        print("numberOfItems",self.theseReturnedPhotoURLs.count)
+        return self.theseReturnedPhotoURLs.count
+        }
     }
    
     
@@ -212,28 +195,68 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         photoCell.backgroundColor = UIColor.blueColor()
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
-        
         let fetchedObjects = self.testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
-
-        let photoSet = (thisPin.photos as! Set<Photo>)
-            
-        let photoArray = Array(photoSet)
-            
-        let thisPhoto = photoArray[indexPath.item]
-
-        dispatch_async(dispatch_get_main_queue()) {
-                photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
-
-            }
-       
-        })
         
+        print("newDownload", newDownload)
+        
+        if newDownload == false {
+            let photoSet = (thisPin.photos as! Set<Photo>)
+            
+            let photoArray = Array(photoSet)
+            
+            let thisPhoto = photoArray[indexPath.item]
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
+                
+            
+                
+            }
+        }
+        
+        else {
+            
+            NewCollectionButton.enabled = false
+            self.downloadPhotos(self.theseReturnedPhotoURLs[indexPath.item] as! NSString) {(results, error) in
+                
+                
+                if (error != nil) {
+                    
+                    let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                    uiAlertController.addAction(defaultAction)
+                    self.presentViewController(uiAlertController, animated: true, completion: nil)
+                    
+                }
+                else {
+                    self.newDownload == false
+                    print("downloadPhotos")
+
+                    self.addPhotos(thisPin, thisPhoto: results as! NSData )
+                    
+
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        let thisImage = UIImage(data:results as! NSData)
+
+                        photoCell.photoImageView.image = thisImage
+                        
+                    }
+                    self.NewCollectionButton.enabled = true
+
+                }
+            }
+                
+        }
+            
+
         return photoCell
     }
     
+
+  
     
     @IBAction func newCollectionPressed(sender: AnyObject) {
         
@@ -241,7 +264,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let  thisPin = fetchedObjects![0] as! Pin
         let photoSet = (thisPin.photos as! Set<Photo>)
-
+        
         var photoArray = Array(photoSet)
         
         photoArray.removeAll()
@@ -249,15 +272,19 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         for photo in photoArray {
             if let context = testFetchedResultsController?.managedObjectContext {
-             
-            context.deleteObject(photo)
+                
+                context.deleteObject(photo)
                 
             }
             
         }
         
+        print("newCollectionPressed after delete - photoArray.count", photoArray.count)
         
-        let randomPage = Int(arc4random_uniform(UInt32(min(40,flickrTotPages))))
+        print("newCollectionPressed after delete - thisPin.photos count", thisPin.photos!.count)
+        
+        
+        let randomPage = Int(arc4random_uniform(UInt32(max(40,flickrTotPages))))
         print("randomPage", randomPage)
         
         GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude, page: randomPage) {(results, error)   in
@@ -271,27 +298,22 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 
             }
             else {
-                var theseReturnedPhotoURLs = []
-                theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+
+
+                self.newDownload = true
                 
-                for photoURLStringFromGetPhotos in theseReturnedPhotoURLs {
-                    
-                    let photoURLFromGetPhotos = NSURL(string: photoURLStringFromGetPhotos as! String)
-                    
-                    let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
-                    
-                    self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos!)
-                    
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.collectionView.reloadData()
-                    }
+                self.theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                print(self.theseReturnedPhotoURLs)
+                print(self.theseReturnedPhotoURLs.count)
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.collectionView.reloadData()
                     
                 }
-                
+
             }
             
         }
-        
     }
     
     

@@ -41,7 +41,7 @@ class GetPhotos  {
         bboxString = bboxString + (bboxSelectedLatitude as String)
         
         var flickrPageString = "&page="
-        //var flickrPageNum = 1
+
         var flickrPageNumString = String(page)
         flickrPageString = flickrPageString + (flickrPageNumString)
         

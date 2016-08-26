@@ -106,6 +106,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         var selectedCoordinateLongitude:CLLocationDegrees!
         selectedCoordinateLongitude  = view.annotation?.coordinate.longitude
+        
+        mapView.deselectAnnotation(view.annotation, animated: true )
 
         selectedCoordinateLatitudeString = "\(selectedCoordinateLatitude)"
 
