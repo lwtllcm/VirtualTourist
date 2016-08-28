@@ -199,18 +199,20 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let  thisPin = fetchedObjects![0] as! Pin
         
-        print("newDownload", newDownload)
+        //print("newDownload", newDownload)
         
         if newDownload == false {
+            
             let photoSet = (thisPin.photos as! Set<Photo>)
             
             let photoArray = Array(photoSet)
+            if photoArray.count > 0 {
             
             let thisPhoto = photoArray[indexPath.item]
             
             dispatch_async(dispatch_get_main_queue()) {
                 photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
-                
+                }
             
                 
             }
@@ -260,6 +262,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     @IBAction func newCollectionPressed(sender: AnyObject) {
         
+        
+        //
+        
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
@@ -267,17 +272,17 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         var photoArray = Array(photoSet)
         
-        photoArray.removeAll()
-        thisPin.photos = NSSet(array: photoArray)
+        //photoArray.removeAll()
         
-        for photo in photoArray {
+        //
+        thisPin.photos = NSSet(array: photoArray)
+        for photo in thisPin.photos!{
             if let context = testFetchedResultsController?.managedObjectContext {
                 
-                context.deleteObject(photo)
-                
+                context.deleteObject(photo as! NSManagedObject)
             }
-            
         }
+        
         
         print("newCollectionPressed after delete - photoArray.count", photoArray.count)
         
@@ -318,7 +323,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath){
-        
+        newDownload = false
+        //print("didSelectItemAtIndexPath newDownload = ", newDownload)
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
