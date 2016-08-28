@@ -95,6 +95,9 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bTp-qj-9dB">
                                                     <rect key="frame" x="0.0" y="0.0" width="170" height="134"/>
                                                 </imageView>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="SXM-Un-4lA">
+                                                    <rect key="frame" x="67" y="48" width="37" height="37"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -106,6 +109,7 @@
                                             <constraint firstAttribute="bottomMargin" secondItem="bTp-qj-9dB" secondAttribute="bottom" constant="-8" id="shJ-pq-ijo"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="activityIndicator" destination="SXM-Un-4lA" id="R2t-uJ-xSc"/>
                                             <outlet property="photoImageView" destination="bTp-qj-9dB" id="5fw-Cs-qAh"/>
                                         </connections>
                                     </collectionViewCell>

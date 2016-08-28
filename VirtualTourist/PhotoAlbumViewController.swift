@@ -112,7 +112,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                     self.collectionView.reloadData()
                 }
                 
-                
             }
             
         }
@@ -186,6 +185,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         print("numberOfItems",self.theseReturnedPhotoURLs.count)
         return self.theseReturnedPhotoURLs.count
         }
+        
     }
    
     
@@ -194,6 +194,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
         
         photoCell.backgroundColor = UIColor.blueColor()
+        photoCell.activityIndicator.startAnimating()
         
         let fetchedObjects = self.testFetchedResultsController?.fetchedObjects
         
@@ -211,11 +212,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             let thisPhoto = photoArray[indexPath.item]
             
             dispatch_async(dispatch_get_main_queue()) {
+                photoCell.activityIndicator.stopAnimating()
                 photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
                 }
-            
                 
             }
+            
         }
         
         else {
@@ -242,6 +244,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         let thisImage = UIImage(data:results as! NSData)
+                        photoCell.activityIndicator.stopAnimating()
 
                         photoCell.photoImageView.image = thisImage
                         
@@ -249,6 +252,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                     self.NewCollectionButton.enabled = true
 
                 }
+                
             }
                 
         }
@@ -257,7 +261,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         return photoCell
     }
     
-
   
     
     @IBAction func newCollectionPressed(sender: AnyObject) {
@@ -281,6 +284,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 
                 context.deleteObject(photo as! NSManagedObject)
             }
+            
         }
         
         
@@ -319,12 +323,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             }
             
         }
+        
     }
     
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath){
         newDownload = false
-        //print("didSelectItemAtIndexPath newDownload = ", newDownload)
+
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
@@ -352,7 +357,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             presentViewController(uiAlertController, animated: true, completion: nil)
             
         }
-        
         
         dispatch_async(dispatch_get_main_queue()) {
             collectionView.reloadData()
