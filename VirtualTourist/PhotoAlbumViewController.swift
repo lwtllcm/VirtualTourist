@@ -194,7 +194,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
         
         photoCell.backgroundColor = UIColor.blueColor()
-        photoCell.activityIndicator.startAnimating()
+        //photoCell.activityIndicator.startAnimating()
+        photoCell.activityIndicator.stopAnimating()
+
         
         let fetchedObjects = self.testFetchedResultsController?.fetchedObjects
         
@@ -223,38 +225,29 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         else {
             
             NewCollectionButton.enabled = false
-            self.downloadPhotos(self.theseReturnedPhotoURLs[indexPath.item] as! NSString) {(results, error) in
+            photoCell.activityIndicator.startAnimating()
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
+                let photoURLFromGetPhotos = NSURL(string: self.theseReturnedPhotoURLs[indexPath.item] as! String)
+                print(photoURLFromGetPhotos)
+            
+                let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
+                print(photoImageFromGetPhotos)
+            
+            
+                let thisImage = UIImage(data:photoImageFromGetPhotos! )
+            
+                dispatch_async(dispatch_get_main_queue()) {
+                self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos! )
+                    
+                    
+                photoCell.activityIndicator.stopAnimating()
                 
-                
-                if (error != nil) {
-                    
-                    let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
-                    let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                    uiAlertController.addAction(defaultAction)
-                    self.presentViewController(uiAlertController, animated: true, completion: nil)
-                    
-                }
-                else {
-                    self.newDownload == false
-                    print("downloadPhotos")
-
-                    self.addPhotos(thisPin, thisPhoto: results as! NSData )
-                    
-
-                    
-                    dispatch_async(dispatch_get_main_queue()) {
-                        let thisImage = UIImage(data:results as! NSData)
-                        photoCell.activityIndicator.stopAnimating()
-
-                        photoCell.photoImageView.image = thisImage
-                        
-                    }
-                    self.NewCollectionButton.enabled = true
-
-                }
+                photoCell.photoImageView.image = thisImage
                 
             }
-                
+            self.NewCollectionButton.enabled = true
+            })
+
         }
             
 
@@ -286,6 +279,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             }
             
         }
+        
         
         
         print("newCollectionPressed after delete - photoArray.count", photoArray.count)
