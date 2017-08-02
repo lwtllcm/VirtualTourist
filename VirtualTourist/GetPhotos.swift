@@ -10,33 +10,37 @@ import Foundation
 
 class GetPhotos  {
     
-    var session = NSURLSession.sharedSession()
+    var session = URLSession.shared
     
     
     class  func sharedInstance() -> GetPhotos {
         struct Singleton {
             static let sharedInstance = GetPhotos()
             
-            private init() {}
+            fileprivate init() {}
         }
         return Singleton.sharedInstance
     }
 
-    func getPhotos(selectedLatitude: String, selectedLongitude: String, page: Int, completionHandlerForGET:(result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    func getPhotos(_ selectedLatitude: String, selectedLongitude: String, page: Int, completionHandlerForGET:@escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         print("getPhotos")
         
         
-        let session = NSURLSession.sharedSession()
+        let session = URLSession.shared
         
         
         var bboxString = "lon="
-        var bboxSelectedLongitude:NSString = selectedLongitude
+       // var bboxSelectedLongitude:NSString = selectedLongitude as NSString
+        
+        var bboxSelectedLongitude = selectedLongitude
         
         bboxString = bboxString + (bboxSelectedLongitude as String)
         
         bboxString = bboxString + "&lat="
         
-        var bboxSelectedLatitude:NSString = selectedLatitude
+        //var bboxSelectedLatitude:NSString = selectedLatitude as NSString
+        
+        var bboxSelectedLatitude = selectedLatitude 
 
         bboxString = bboxString + (bboxSelectedLatitude as String)
         
@@ -54,18 +58,19 @@ class GetPhotos  {
         print("flickrSearchURLString", flickrSearchURLString)
         
         
-        var flickrSearchURL = NSURL(string: flickrSearchURLString)!
+        var flickrSearchURL = URL(string: flickrSearchURLString)!
         print(" ")
         print("flickrSearchURL", flickrSearchURL)
         
-        let request = NSMutableURLRequest(URL: flickrSearchURL)
+        let request = NSMutableURLRequest(url: flickrSearchURL)
         print(" ")
         print(request)
         
-        let task = session.dataTaskWithRequest(request) {(data, response, error) in
+     //   let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
             
-            
-            func displayError(error: String) {
+            let task = session.dataTask(with: request as URLRequest) {(data, response, error) in
+                
+            func displayError(_ error: String) {
                 print(error)
             }
             
@@ -75,11 +80,20 @@ class GetPhotos  {
                 return
             }
             
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+          //  guard let statusCode = (response as? HTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            
+            if ((((response as? HTTPURLResponse)?.statusCode)!  < 200 ) ){
 
-                print("Your request returned a status code other than 2xx!")
+                print("Your request returned a status code lower than 2xx!")
                 return
             }
+                
+                if ((((response as? HTTPURLResponse)?.statusCode)!  > 200 ) ){
+                    
+                    print("Your request returned a status code lower than 2xx!")
+                    return
+                }
+
             
             guard data != nil else {
 
@@ -99,22 +113,22 @@ class GetPhotos  {
         return task
     }
     
-    private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
+    fileprivate func convertDataWithCompletionHandler(_ data: Data, completionHandlerForConvertData: (_ result: AnyObject?, _ error: NSError?) -> Void) {
         print("convertDataWithCompletionHandler")
         var parsedResult: AnyObject!
         
         do {
             
-            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
             
             
         }
         catch {
             let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-            completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
+            completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
         
-        completionHandlerForConvertData(result: parsedResult, error: nil)
+        completionHandlerForConvertData(parsedResult, nil)
         
     }
 

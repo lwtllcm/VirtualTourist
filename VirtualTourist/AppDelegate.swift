@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let stack = CoreDataStack(modelName: "Model")!
     
-   // var flickrPhotos = [FlickrPhotos]()
+    var flickrPhotos = [FlickrPhotos]()
     
     //Key:
     //d590bf9e37f0415994f25fa25cc23dc7
@@ -23,15 +23,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //Secret:
     //1fd1f35797a94d19
     
-    var returnedPhotosArray  = []
+    //var returnedPhotosArray  = []
+    
+    var returnedPhotosArray:NSMutableArray = []
     
 
-    var sharedSession = NSURLSession.sharedSession()
+    var sharedSession = URLSession.shared
 
  
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         print(paths[0])
         
         stack.autoSave(20)
@@ -39,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         do {
             try stack.saveContext()
         }catch{
@@ -48,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         do {
 
             try stack.saveContext()
@@ -56,15 +58,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("error while saving")
         }    }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
 
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
 
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
 
     }
 

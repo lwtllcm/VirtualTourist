@@ -14,16 +14,17 @@ import Foundation
 
 class FlickrPhotos {
     
-    var session = NSURLSession.sharedSession()
-
+    var session = URLSession.shared
+    
     
     //let request = NSMutableURLRequest(URL:NSURL(string: "https://www.flickr.com/photos")!)
     //var session = NSURLSession.sharedSession()
     //let session = NSURLSession()
     
-    func getPhotos(completionHandlerForGet:(result:AnyObject!, error:NSError)? -> Void) -> NSURLSessionDataTask {
+    func getPhotos(_ completionHandlerForGet:((result:AnyObject?, error:NSError)?) -> Void) -> URLSessionDataTask {
+        print("getPhotos")
         
-        let request = NSMutableURLRequest(URL:NSURL(string: "https://www.flickr.com/photos")!)
+        let request = NSMutableURLRequest(url:URL(string: "https://www.flickr.com/photos")!)
         //var session = NSURLSession.sharedSession()
         /*
         let task =  session.dataTaskWithRequest(request) {data, response, error in
@@ -33,7 +34,7 @@ class FlickrPhotos {
             
             */
         
-            let task = session.dataTaskWithRequest(request)
+        let task = session.dataTask(with: request as URLRequest)
             return task
         }
     }
