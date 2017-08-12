@@ -294,18 +294,22 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             
             NewCollectionButton.isEnabled = false
             photoCell.activityIndicator.startAnimating()
-    /*        DispatchQueue.global(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0).async(execute: {
+            
+            DispatchQueue.global(qos: .background).async {
+               
+    //        DispatchQueue.global(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0).async(execute: {
+                
                 let photoURLFromGetPhotos = NSURL(string: self.theseReturnedPhotoURLs[indexPath.item] as! String)
                 print(photoURLFromGetPhotos)
                 
-                let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos! as URL)
+                let photoImageFromGetPhotos = NSData(contentsOf:photoURLFromGetPhotos! as URL)
                 print(photoImageFromGetPhotos)
                 
                 
-                let thisImage = UIImage(data:photoImageFromGetPhotos! )
+                let thisImage = UIImage(data:photoImageFromGetPhotos! as Data )
                 
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos! )
+                DispatchQueue.main.async() {
+                    self.addPhotos(thisPin: thisPin, thisPhoto: photoImageFromGetPhotos! )
                     
                     
                     photoCell.activityIndicator.stopAnimating()
@@ -313,9 +317,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                     photoCell.photoImageView.image = thisImage
                     
                 }
-                self.NewCollectionButton.enabled = true
-            })
-     */
+                self.NewCollectionButton.isEnabled = true
+            }
+ 
         }
         
         
