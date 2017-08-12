@@ -17,12 +17,12 @@ class GetPhotos  {
         struct Singleton {
             static let sharedInstance = GetPhotos()
             
-            fileprivate init() {}
+            private init() {}
         }
         return Singleton.sharedInstance
     }
-
-    func getPhotos(_ selectedLatitude: String, selectedLongitude: String, page: Int, completionHandlerForGET:@escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+    
+    func getPhotos(selectedLatitude: String, selectedLongitude: String, page: Int, completionHandlerForGET:@escaping (_ result: AnyObject?, _ error:NSError?) -> Void) -> URLSessionDataTask {
         print("getPhotos")
         
         
@@ -30,22 +30,18 @@ class GetPhotos  {
         
         
         var bboxString = "lon="
-       // var bboxSelectedLongitude:NSString = selectedLongitude as NSString
-        
-        var bboxSelectedLongitude = selectedLongitude
+        var bboxSelectedLongitude:NSString = selectedLongitude as NSString
         
         bboxString = bboxString + (bboxSelectedLongitude as String)
         
         bboxString = bboxString + "&lat="
         
-        //var bboxSelectedLatitude:NSString = selectedLatitude as NSString
+        var bboxSelectedLatitude:NSString = selectedLatitude as NSString
         
-        var bboxSelectedLatitude = selectedLatitude 
-
         bboxString = bboxString + (bboxSelectedLatitude as String)
         
         var flickrPageString = "&page="
-
+        
         var flickrPageNumString = String(page)
         flickrPageString = flickrPageString + (flickrPageNumString)
         
@@ -58,51 +54,48 @@ class GetPhotos  {
         print("flickrSearchURLString", flickrSearchURLString)
         
         
-        var flickrSearchURL = URL(string: flickrSearchURLString)!
+        var flickrSearchURL = NSURL(string: flickrSearchURLString)!
         print(" ")
         print("flickrSearchURL", flickrSearchURL)
         
-        let request = NSMutableURLRequest(url: flickrSearchURL)
+        //let request = NSMutableURLRequest(url: flickrSearchURL as URL)
+        let request = URLRequest(url: flickrSearchURL as URL)
+
         print(" ")
         print(request)
+        print(" ")
         
-     //   let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
+        let task = session.dataTask(with: request as URLRequest) {(data, response, error) in
             
-            let task = session.dataTask(with: request as URLRequest) {(data, response, error) in
-                
-            func displayError(_ error: String) {
+            
+            func displayError(error: String) {
                 print(error)
             }
             
             guard (error == nil) else {
-
-                print("There was an error with your request: \(error)")
-                return
-            }
-            
-          //  guard let statusCode = (response as? HTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-            
-            if ((((response as? HTTPURLResponse)?.statusCode)!  < 200 ) ){
-
-                print("Your request returned a status code lower than 2xx!")
-                return
-            }
                 
-                if ((((response as? HTTPURLResponse)?.statusCode)!  > 200 ) ){
-                    
-                    print("Your request returned a status code lower than 2xx!")
-                    return
-                }
-
-            
+                print("There was an error with your request: \(String(describing: error?.localizedDescription))")
+                return
+            }
+            /*
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                
+                print("Your request returned a status code other than 2xx!")
+                return
+            }
+            */
             guard data != nil else {
-
+                
                 print("No data was returned by the request!")
                 
                 return
             }
             
-            self.convertDataWithCompletionHandler(data!, completionHandlerForConvertData: completionHandlerForGET)
+            print("ready for convertData")
+           //self.convertDataWithCompletionHandler(data: data! as NSData, completionHandlerForConvertData: completionHandlerForGET as! (Any?, NSError?) -> Void)
+            
+            self.convertDataWithCompletionHandler(data!, completionHandlerForConvertData: completionHandlerForGET )
+            
             print("data returned")
             
             
@@ -113,13 +106,20 @@ class GetPhotos  {
         return task
     }
     
+   // private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (AnyObject?, NSError?) -> Void) {
+    //private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (Any?, NSError?) -> Void) {
+    
     fileprivate func convertDataWithCompletionHandler(_ data: Data, completionHandlerForConvertData: (_ result: AnyObject?, _ error: NSError?) -> Void) {
+
         print("convertDataWithCompletionHandler")
-        var parsedResult: AnyObject!
+        //var parsedResult: AnyObject!
+        //var parsedResult: Any!
+        var parsedResult: [String:AnyObject]!
         
         do {
             
-            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
+            parsedResult = try JSONSerialization.jsonObject(with: data as Data, options: .allowFragments) as! [String:AnyObject]
+            print("parsedResult", parsedResult)
             
             
         }
@@ -128,8 +128,10 @@ class GetPhotos  {
             completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
         
-        completionHandlerForConvertData(parsedResult, nil)
+        //completionHandlerForConvertData(parsedResult as AnyObject?, nil)
+        
+        completionHandlerForConvertData(parsedResult as AnyObject?, nil)
         
     }
-
+    
 }
