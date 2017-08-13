@@ -328,14 +328,29 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     
     
-    @IBAction func newCollectionPressed(sender: AnyObject) {
+    @IBAction func newCollectionPressed(_ sender: AnyObject) {
         
         
         //
+        /*
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        
+        testFetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        let fetchedObjects = testFetchedResultsController?.fetchedObjects as! NSMutableArray
+
+       */
+
+        print("newCollectionPressed")
+        
         
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
-        let  thisPin = fetchedObjects![0] as! Pin
+        let  thisPin = fetchedObjects?[0] as! Pin
         let photoSet = (thisPin.photos as! Set<Photo>)
         
         var photoArray = Array(photoSet)
@@ -376,6 +391,18 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 
                 
                 self.newDownload = true
+                
+                let resultsDictionary = results?["photos"] as! [String:Any]
+                let resultPhotoArray = resultsDictionary["photo"] as! NSArray
+                // let thisPhotoResult = resultPhotoArray[0] as! [String:Any]
+                
+                //print("url_m", thisPhotoResult["url_m"])
+                
+                for index in resultPhotoArray  {
+                    let thisPhotoResult = index as! [String:Any]
+                    self.theseReturnedPhotoURLs.add(thisPhotoResult["url_m"] as! String)
+                }
+                
                 
             //    self.theseReturnedPhotoURLs = (((results?.value(forKey: "photos") as AnyObject).value(forKey: "photo") as AnyObject).value(forKey: "url_m"))! as! NSArray
                 print(self.theseReturnedPhotoURLs)
