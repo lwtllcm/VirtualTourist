@@ -283,7 +283,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 
                 DispatchQueue.main.async() {
                     photoCell.activityIndicator.stopAnimating()
-                    photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
+                 //   photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
                 }
                 
             }

@@ -17,7 +17,7 @@ class Photo: NSManagedObject {
         
         if let photo = NSEntityDescription.entity(forEntityName: "Photo", in: context) {
             self.init(entity:photo, insertInto: context)
-            self.imageData = imageData
+          //  self.imageData = imageData
         }else{
             fatalError("Unable to find Entity name!")
         }
