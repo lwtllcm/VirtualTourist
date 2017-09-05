@@ -20,7 +20,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     var selectedCoordinateLatitudeString:String!
     var selectedCoordinateLongitudeString:String!
     
-    var fetchedResultsController:NSFetchedResultsController? {
+    var fetchedResultsController:NSFetchedResultsController<NSFetchRequestResult>? {
         didSet {
             executeSearch()
         }
@@ -35,10 +35,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
 
             }
             catch {
-                let uiAlertController = UIAlertController(title: "performFetch error", message: "error in performFetch", preferredStyle: .Alert)
-                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                let uiAlertController = UIAlertController(title: "performFetch error", message: "error in performFetch", preferredStyle: .alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
                 uiAlertController.addAction(defaultAction)
-                presentViewController(uiAlertController, animated: true, completion: nil)
+                present(uiAlertController, animated: true, completion: nil)
 
             }
             
@@ -49,20 +49,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let fr = NSFetchRequest(entityName: "Pin")
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
         
-        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let delegate = UIApplication.shared.delegate as! AppDelegate
         let stack = delegate.stack
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
         if fetchedResultsController?.fetchedObjects?.count == 0 {
 
-            let uiAlertController = UIAlertController(title: "no fetched results", message: "no fetched results", preferredStyle: .Alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            let uiAlertController = UIAlertController(title: "no fetched results", message: "no fetched results", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             uiAlertController.addAction(defaultAction)
-            presentViewController(uiAlertController, animated: true, completion: nil)
+            present(uiAlertController, animated: true, completion: nil)
 
         }
         else {
@@ -77,13 +77,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
   }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         
     }
     
-    func setAnnotations (pin:Pin) {
+    func setAnnotations (_ pin:Pin) {
        
         let lat1 = CLLocationDegrees(pin.latitude!)
 
@@ -99,7 +99,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
     }
     
-    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
 
         var selectedCoordinateLatitude:CLLocationDegrees!
         selectedCoordinateLatitude  = view.annotation?.coordinate.latitude
@@ -114,9 +114,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         selectedCoordinateLongitudeString = "\(selectedCoordinateLongitude)"
 
         var  photoAlbumViewController:PhotoAlbumViewController
-        photoAlbumViewController = storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
+        photoAlbumViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
         
-        performSegueWithIdentifier("showPhotoAlbum", sender: self)
+        performSegue(withIdentifier: "showPhotoAlbum", sender: self)
         
     }
     
@@ -124,13 +124,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         super.didReceiveMemoryWarning()
     }
     
-    @IBAction func longPressed(sender: UILongPressGestureRecognizer) {
+    @IBAction func longPressed(_ sender: UILongPressGestureRecognizer) {
         
-        if (sender.state == .Began) {
+        if (sender.state == .began) {
             
-            let tappedLocation = sender.locationInView(mapView)
+            let tappedLocation = sender.location(in: mapView)
 
-            let tappedCoordinate = mapView.convertPoint(tappedLocation, toCoordinateFromView: mapView)
+            let tappedCoordinate = mapView.convert(tappedLocation, toCoordinateFrom: mapView)
 
             let tappedLatitude = String(tappedCoordinate.latitude)
             let tappedLongitude = String(tappedCoordinate.longitude)
@@ -141,7 +141,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
             addPin("location", latitude: tappedLatitude , longitude: tappedLongitude )
         
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.mapView.addAnnotation(annotation)
             }
             
@@ -149,35 +149,35 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
     }
     
-    func addPin(location:String, latitude:String, longitude:String) {
+    func addPin(_ location:String, latitude:String, longitude:String) {
         
         let pin = Pin(location: location, latitude: latitude, longitude: longitude, context: fetchedResultsController!.managedObjectContext)
         
         do {
             
-            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let delegate = UIApplication.shared.delegate as! AppDelegate
             let stack = delegate.stack
             
             try stack.save()
         }catch{
-            let uiAlertController = UIAlertController(title: "error in addPin", message: "error in addPin", preferredStyle: .Alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            let uiAlertController = UIAlertController(title: "error in addPin", message: "error in addPin", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             uiAlertController.addAction(defaultAction)
-            presentViewController(uiAlertController, animated: true, completion: nil)
+            present(uiAlertController, animated: true, completion: nil)
 
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "showPhotoAlbum" {
-            if let photoAlbumViewController = segue.destinationViewController as? PhotoAlbumViewController {
+            if let photoAlbumViewController = segue.destination as? PhotoAlbumViewController {
             
         
-        let fr = NSFetchRequest(entityName: "Pin")
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending:  true), NSSortDescriptor(key: "longitude", ascending:  true)]
         
-        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let delegate = UIApplication.shared.delegate as! AppDelegate
         let stack = delegate.stack
 
         let pred1 = NSPredicate(format: "latitude = %@", selectedCoordinateLatitudeString)

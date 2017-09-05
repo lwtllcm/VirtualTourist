@@ -21,13 +21,46 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     @IBOutlet weak var NewCollectionButton: UIButton!
     
-    var returnedPhotoURLs = []
+    //var returnedPhotoURLs = []
+    var returnedPhotoURLs:NSMutableArray = []
     var returnedPhotosArray:NSMutableArray = []
     
-    var theseReturnedPhotoURLs = []
+    //var theseReturnedPhotoURLs = []
+    var theseReturnedPhotoURLs:NSMutableArray = []
     
-    var testFetchedResultsController:NSFetchedResultsController?
+    //var testFetchedResultsController:NSFetchedResultsController<NSFetchRequestResult>?
    
+    
+    var testFetchedResultsController:NSFetchedResultsController<NSFetchRequestResult>? {
+        didSet {
+            executeSearch()
+        }
+        
+    }
+    
+    func executeSearch() {
+        
+        print("executeSearch")
+        
+        if let fc = testFetchedResultsController {
+            do {
+                try fc.performFetch()
+                
+            }
+            catch {
+                let uiAlertController = UIAlertController(title: "performFetch error", message: "error in performFetch", preferredStyle: .alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                uiAlertController.addAction(defaultAction)
+                present(uiAlertController, animated: true, completion: nil)
+                
+            }
+            
+        }
+        
+    }
+    
+    
+    
     
     //latitude and longitude passed from view controller
     var selectedLatitude = ""
@@ -47,7 +80,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let space: CGFloat = 3.0
         flowLayout.minimumLineSpacing = space
         flowLayout.minimumLineSpacing = space        
-        flowLayout.itemSize = CGSizeMake(100.0, 100.0)
+        flowLayout.itemSize = CGSize(width: 100.0, height: 100.0)
 
         returnedPhotosArray.removeAllObjects()
       
@@ -55,10 +88,23 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     
     //viewWillAppear
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("photo album viewwillappear")
         //show focused map for selected pin
+        
+        
+        
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        
+        testFetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+
+        
+        
         
         let mapSpan = MKCoordinateSpanMake(2.0, 2.0)
     
@@ -83,32 +129,48 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         mapView.addAnnotation(annotation)
         
        
+        
+        collectionView.reloadData()
+        
       
         let  thisPin = fetchedObjects![0] as! Pin
         
         
-        print("viewWillAppear",thisPin.photos?.count)
+        print("viewWillAppear",thisPin.photos?.count as Any)
         if thisPin.photos?.count == 0 {
             
-            GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude: selectedLongitude, page:flickrPage) {(results, error)   in
+            GetPhotos.sharedInstance().getPhotos(selectedLatitude, selectedLongitude:selectedLongitude, page:flickrPage) {(results, error)   in
             
             if (error != nil) {
                 
-                let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
-                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
                 uiAlertController.addAction(defaultAction)
-                self.presentViewController(uiAlertController, animated: true, completion: nil)
+                self.present(uiAlertController, animated: true, completion: nil)
                 
             }
             else {
 
                 self.newDownload = true
+                
+                
+                let resultsDictionary = results?["photos"] as! [String:Any]
+                let resultPhotoArray = resultsDictionary["photo"] as! NSArray
+                // let thisPhotoResult = resultPhotoArray[0] as! [String:Any]
+                
+                //print("url_m", thisPhotoResult["url_m"])
+                
+                for index in resultPhotoArray  {
+                    let thisPhotoResult = index as! [String:Any]
+                    self.theseReturnedPhotoURLs.add(thisPhotoResult["url_m"] as! String)
+                }
 
-                self.theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                //self.theseReturnedPhotoURLs = (((results? as AnyObject).value(forKey: "photos")? as AnyObject).value(forKey: "photo")?.value(forKey: "url_m"))! as! NSArray
+                
                 print(self.theseReturnedPhotoURLs)
                 print(self.theseReturnedPhotoURLs.count)
                 
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.collectionView.reloadData()
                 }
                 
@@ -126,51 +188,51 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         }
     }
     
-    func downloadPhotos (thisURL:NSString, completionHandler:(result: AnyObject!, error:NSError?) -> Void) {
+    func downloadPhotos (_ thisURL:NSString, completionHandler:(_ result: AnyObject?, _ error:NSError?) -> Void) {
         
         
         
         print("downloadPhotos existing count", thisURL)
         
-        let photoURLFromGetPhotos = NSURL(string: thisURL as String)
+        let photoURLFromGetPhotos = URL(string: thisURL as String)
 
-        let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
+        let photoImageFromGetPhotos = try? Data(contentsOf: photoURLFromGetPhotos!)
         
             
         
-        completionHandler(result: photoImageFromGetPhotos, error: nil)
+        completionHandler(photoImageFromGetPhotos as AnyObject, nil)
     }
     
-    func getLatLon(pin:Pin) {
+    func getLatLon(_ pin:Pin) {
         selectedLatitude = pin.latitude!
         selectedLongitude = pin.longitude!
     }
     
     
     
-    func addPhotos(thisPin:Pin, thisPhoto:NSData) {
+    func addPhotos(_ thisPin:Pin, thisPhoto:Data) {
         
         let photo = Photo(imageData: thisPhoto, context: testFetchedResultsController!.managedObjectContext)
 
         photo.pin = thisPin
         
         do {
-            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let delegate = UIApplication.shared.delegate as! AppDelegate
             let stack = delegate.stack
             
             try stack.save()
         }catch{
-            let uiAlertController = UIAlertController(title: "addPhotos error", message: "error in addPhotos", preferredStyle: .Alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            let uiAlertController = UIAlertController(title: "addPhotos error", message: "error in addPhotos", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             uiAlertController.addAction(defaultAction)
-            presentViewController(uiAlertController, animated: true, completion: nil)
+            present(uiAlertController, animated: true, completion: nil)
 
         }
         
      }
     
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
@@ -189,11 +251,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
    
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let photoCell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! PhotoCollectionViewCell
+        let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionViewCell", for: indexPath) as! PhotoCollectionViewCell
         
-        photoCell.backgroundColor = UIColor.blueColor()
+        photoCell.backgroundColor = UIColor.blue
         //photoCell.activityIndicator.startAnimating()
         photoCell.activityIndicator.stopAnimating()
 
@@ -213,9 +275,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             
             let thisPhoto = photoArray[indexPath.item]
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 photoCell.activityIndicator.stopAnimating()
-                photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData!)
+                photoCell.photoImageView.image = UIImage(data:thisPhoto.imageData! as Data)
                 }
                 
             }
@@ -224,19 +286,19 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         else {
             
-            NewCollectionButton.enabled = false
+            NewCollectionButton.isEnabled = false
             photoCell.activityIndicator.startAnimating()
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
-                let photoURLFromGetPhotos = NSURL(string: self.theseReturnedPhotoURLs[indexPath.item] as! String)
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background).async(execute: {
+                let photoURLFromGetPhotos = URL(string: self.theseReturnedPhotoURLs[indexPath.item] as! String)
                 print(photoURLFromGetPhotos)
             
-                let photoImageFromGetPhotos = NSData(contentsOfURL:photoURLFromGetPhotos!)
+                let photoImageFromGetPhotos = try? Data(contentsOf: photoURLFromGetPhotos!)
                 print(photoImageFromGetPhotos)
             
             
                 let thisImage = UIImage(data:photoImageFromGetPhotos! )
             
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                 self.addPhotos(thisPin, thisPhoto: photoImageFromGetPhotos! )
                     
                     
@@ -245,7 +307,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 photoCell.photoImageView.image = thisImage
                 
             }
-            self.NewCollectionButton.enabled = true
+            self.NewCollectionButton.isEnabled = true
             })
 
         }
@@ -256,7 +318,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
   
     
-    @IBAction func newCollectionPressed(sender: AnyObject) {
+    @IBAction func newCollectionPressed(_ sender: AnyObject) {
         
         
         //
@@ -275,7 +337,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         for photo in thisPin.photos!{
             if let context = testFetchedResultsController?.managedObjectContext {
                 
-                context.deleteObject(photo as! NSManagedObject)
+                context.delete(photo as! NSManagedObject)
             }
             
         }
@@ -294,10 +356,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             
             if (error != nil) {
                 
-                let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .Alert)
-                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                let uiAlertController = UIAlertController(title: "download photos error", message: "error in downloadPhotos", preferredStyle: .alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
                 uiAlertController.addAction(defaultAction)
-                self.presentViewController(uiAlertController, animated: true, completion: nil)
+                self.present(uiAlertController, animated: true, completion: nil)
                 
             }
             else {
@@ -305,11 +367,15 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
 
                 self.newDownload = true
                 
-                self.theseReturnedPhotoURLs = (results.valueForKey("photos")?.valueForKey("photo")?.valueForKey("url_m"))! as! NSArray
+                //self.theseReturnedPhotoURLs = (((results? as AnyObject).value(forKey: "photos")? as AnyObject).value(forKey: "photo")?.value(forKey: "url_m"))! as! NSArray
+                
+                let resultsDict = results as? NSDictionary
+                
+                
                 print(self.theseReturnedPhotoURLs)
                 print(self.theseReturnedPhotoURLs.count)
                 
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.collectionView.reloadData()
                     
                 }
@@ -321,7 +387,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath){
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath){
         newDownload = false
 
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
@@ -336,23 +402,23 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         do {
             
-            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let delegate = UIApplication.shared.delegate as! AppDelegate
             let stack = delegate.stack
-            stack.context.deleteObject(photoArray[indexPath.item])
+            stack.context.delete(photoArray[indexPath.item])
             try stack.save()
             print("didSelectItemAtIndexPath count after deleteObject", thisPin.photos!.count)
 
             
         }
         catch {
-            let uiAlertController = UIAlertController(title: "delete photos error", message: "error in deletePhotos", preferredStyle: .Alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            let uiAlertController = UIAlertController(title: "delete photos error", message: "error in deletePhotos", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             uiAlertController.addAction(defaultAction)
-            presentViewController(uiAlertController, animated: true, completion: nil)
+            present(uiAlertController, animated: true, completion: nil)
             
         }
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             collectionView.reloadData()
             
             }
