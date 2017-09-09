@@ -21,18 +21,18 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     @IBOutlet weak var NewCollectionButton: UIButton!
     
-    //var returnedPhotoURLs = []
+        //var returnedPhotoURLs = []
     var returnedPhotoURLs:NSMutableArray = []
     var returnedPhotosArray:NSMutableArray = []
     
-    //var theseReturnedPhotoURLs = []
+        //var theseReturnedPhotoURLs = []
     var theseReturnedPhotoURLs:NSMutableArray = []
     
-    //var testFetchedResultsController:NSFetchedResultsController<NSFetchRequestResult>?
+        //var testFetchedResultsController:NSFetchedResultsController<NSFetchRequestResult>?
    
     
     var testFetchedResultsController:NSFetchedResultsController<NSFetchRequestResult>? {
-        didSet {
+        didSet {                                                                                //called after value stored
             executeSearch()
         }
         
@@ -40,7 +40,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     func executeSearch() {
         
-        print("executeSearch")
+        //print("executeSearch")
         
         if let fc = testFetchedResultsController {
             do {
@@ -94,7 +94,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         //show focused map for selected pin
         
         
-        
+       
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
         
@@ -104,6 +104,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         testFetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
 
         
+        executeSearch()
+      
+        if testFetchedResultsController?.fetchedObjects?.count == 0 {
+            print("fetchedObjects.count == 0")
+        }
         
         
         let mapSpan = MKCoordinateSpanMake(2.0, 2.0)
@@ -323,6 +328,16 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         //
         
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        fr.sortDescriptors = [NSSortDescriptor(key: "location", ascending:  true)]
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        
+        testFetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        
+
+        
         let fetchedObjects = testFetchedResultsController?.fetchedObjects
         
         let  thisPin = fetchedObjects![0] as! Pin
@@ -365,11 +380,28 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             else {
 
 
+                
+                
+                
+                
                 self.newDownload = true
                 
                 //self.theseReturnedPhotoURLs = (((results? as AnyObject).value(forKey: "photos")? as AnyObject).value(forKey: "photo")?.value(forKey: "url_m"))! as! NSArray
                 
-                let resultsDict = results as? NSDictionary
+                //let resultsDict = results as? NSDictionary
+                
+                
+                let resultsDictionary = results?["photos"] as! [String:Any]
+                let resultPhotoArray = resultsDictionary["photo"] as! NSArray
+                // let thisPhotoResult = resultPhotoArray[0] as! [String:Any]
+                
+                //print("url_m", thisPhotoResult["url_m"])
+                
+                for index in resultPhotoArray  {
+                    let thisPhotoResult = index as! [String:Any]
+                    self.theseReturnedPhotoURLs.add(thisPhotoResult["url_m"] as! String)
+                }
+
                 
                 
                 print(self.theseReturnedPhotoURLs)
